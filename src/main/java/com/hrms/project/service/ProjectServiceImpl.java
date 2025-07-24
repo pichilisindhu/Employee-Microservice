@@ -1,17 +1,5 @@
 package com.hrms.project.service;
 
-//import org.hrm.Payloads.ProjectDTO;
-//import org.hrm.entity.Department;
-//import org.hrm.entity.Employee;
-//import org.hrm.entity.Project;
-//import org.hrm.handlers.APIException;
-//import org.hrm.handlers.DepartmentNotFoundException;
-//import org.hrm.handlers.ProjectNotFoundException;
-//import org.hrm.handlers.TeamNotFoundException;
-//import org.hrm.repository.DepartmentRepository;
-//import org.hrm.repository.EmployeeRepository;
-//import org.hrm.repository.ProjectRepository;
-//import org.hrm.repository.TeamRepository;
 import com.hrms.project.entity.Employee;
 import com.hrms.project.entity.Project;
 import com.hrms.project.handlers.APIException;
@@ -62,28 +50,6 @@ public class ProjectServiceImpl implements ProjectService {
         project.setStartDate(projectDTO.getStartDate());
         project.setEndDate(projectDTO.getEndDate());
 
-
-//
-//        List<Team> teams = new ArrayList<>();
-//        for (String teamName : projectDTO.getTeamName()) {
-//
-//            Team team = teamRepository.findByTeamName(teamName)
-//                    .orElseThrow(() -> new TeamNotFoundException("Team not found with name: " +teamName ));
-//            teams.add(team);
-//        }
-//        project.setTeams(teams);
-
-
-//        List<Department> departments = new ArrayList<>();
-//        for(String department: projectDTO.getDepartment()) {
-//            Department departmentDetails = departmentRepository.findByDepartmentName(department)
-//                    .orElseThrow(()-> new DepartmentNotFoundException("Department not found with name: " + department));
-//            departments.add(departmentDetails);
-//
-//        }
-//        project.setDepartments(departments);
-
-
         projectRepository.save(project);
 
         return projectDTO;
@@ -108,7 +74,7 @@ public class ProjectServiceImpl implements ProjectService {
             response.setEndDate(project.getEndDate());
             response.setProjectPriority(project.getProjectPriority());
 
-          //  response.setTeamName(project.getTeam().getTeamName());
+
             responseList.add(response);
 
         }
@@ -137,7 +103,7 @@ public class ProjectServiceImpl implements ProjectService {
         response.setEndDate(project.getEndDate());
 
         response.setProjectPriority(project.getProjectPriority());
-       // response.setTeamName(project.getTeam().getTeamName());
+
 
 
 
@@ -166,26 +132,6 @@ public class ProjectServiceImpl implements ProjectService {
         projectByID.setEndDate(projectDTO.getEndDate());
 
         Project savedProject = projectRepository.save(projectByID);
-
-
-//        List<Team> teams = new ArrayList<>();
-//        for (String teamName : projectDTO.getTeamName()) {
-//
-//            Team team = teamRepository.findByTeamName(teamName)
-//                    .orElseThrow(() -> new TeamNotFoundException("Team not found with name: " + projectDTO.getTeamName()));
-//            teams.add(team);
-//        }
-//        projectByID.setTeams(teams);
-//
-//
-//        List<Department> departments = new ArrayList<>();
-//        for(String department: projectDTO.getDepartment()) {
-//            Department departmentDetails = departmentRepository.findByDepartmentName(department)
-//                    .orElseThrow(()-> new DepartmentNotFoundException("Department not found with name: " + projectDTO.getDepartment()));
-//            departments.add(departmentDetails);
-//
-//        }
-//        projectByID.setDepartments(departments);
 
         projectRepository.save(savedProject);
         return projectDTO;

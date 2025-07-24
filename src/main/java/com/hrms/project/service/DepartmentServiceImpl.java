@@ -143,4 +143,20 @@ public class DepartmentServiceImpl implements DepartmentService{
         return employeeDepartmentDTO;
     }
 
+    @Override
+    public String deleteDepartment(String departmentId) {
+
+        Department dept=departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new DepartmentNotFoundException("Department not found with id: " + departmentId));
+        List<Employee> employees = dept.getEmployee();
+        for (Employee emp : employees) {
+            emp.setDepartment(null);
+            employeeRepository.save(emp);
+        }
+
+        departmentRepository.delete(dept);
+        return "Department deleted successfully";
+
+    }
+
 }

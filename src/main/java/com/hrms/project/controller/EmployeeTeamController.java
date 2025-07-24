@@ -18,6 +18,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+
+
 public class EmployeeTeamController {
 
     @Autowired
@@ -66,6 +68,11 @@ public class EmployeeTeamController {
     public ResponseEntity<List<String>> getProjectsByTeam(@PathVariable String teamId) {
        return new ResponseEntity<>(teamService.getProjectsByTeam(teamId),HttpStatus.OK) ;
 
+    }
+
+    @DeleteMapping("/{teamId}/team")
+    public ResponseEntity<String> deleteTeam(@PathVariable String teamId) {
+        return new ResponseEntity<>(teamService.deleteTeam(teamId),HttpStatus.OK);
     }
 
 

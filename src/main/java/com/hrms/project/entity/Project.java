@@ -31,6 +31,9 @@ public class Project {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @ManyToMany(mappedBy = "projects")
+    @ManyToMany(mappedBy = "projects",cascade = CascadeType.ALL)
     private List<Employee> employees;
+
+    @OneToMany(mappedBy = "project",cascade = CascadeType.ALL)
+    private List<Assignment> assignments;
 }

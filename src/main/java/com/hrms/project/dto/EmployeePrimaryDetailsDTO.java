@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -24,5 +25,7 @@ public class EmployeePrimaryDetailsDTO {
     private String gender;
     private LocalDate dateOfBirth;
     private String employeeImage;
+ private LocalDateTime shiftStartTime;
+ private LocalDateTime shiftEndTime;
 
 }

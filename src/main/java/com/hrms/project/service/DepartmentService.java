@@ -21,4 +21,6 @@ public interface DepartmentService {
     DepartmentDTO getByDepartmentId(String departmentId);
 
   EmployeeDepartmentDTO getEmployeeByEmployeeId(String employeeId);
+
+   String deleteDepartment(String departmentId);
 }

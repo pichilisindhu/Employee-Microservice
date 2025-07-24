@@ -228,6 +228,28 @@ public class TeamServiceImpl {
         employeeTeamDTO.setEmployeeId(employeeId);
         return employeeTeamDTO;
     }
+
+    public String deleteTeam(String teamId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new TeamNotFoundException("Team not found with id " + teamId));
+
+        for (Employee employee : new HashSet<>(team.getEmployees())) {
+            employee.getTeams().remove(team);
+        }
+        team.getEmployees().clear();
+
+        for (Project project : team.getProjects()) {
+            project.setTeam(null);
+        }
+
+        teamRepository.save(team);
+        teamRepository.delete(team);
+
+        return "Data removed from team successfully.";
+    }
+
+
+
 }
 
 

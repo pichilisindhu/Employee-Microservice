@@ -1,8 +1,8 @@
 package com.hrms.project.controller;
 
 
+import com.hrms.project.dto.AssignmentDTO;
 import com.hrms.project.entity.Assignment;
-import com.hrms.project.service.AadhaarServiceImpl;
 import com.hrms.project.service.AssignmentServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,29 +20,32 @@ public class AssignmentController {
     @Autowired
     private AssignmentServiceImpl assignmentService;
 
-    @PostMapping("/create/{employeeId}")
-    public ResponseEntity<String> createAssignment(@PathVariable String employeeId, @RequestBody Assignment assignment){
+    @PostMapping("/assignments")
+    public ResponseEntity<String> createAssignment( @RequestBody AssignmentDTO assignmentDTO){
 
-        return new ResponseEntity<>(assignmentService.createAssignment(assignment,employeeId), HttpStatus.CREATED);
+        return new ResponseEntity<>(assignmentService.createAssignment(assignmentDTO), HttpStatus.CREATED);
 
     }
 
     @GetMapping("/{employeeId}")
-    public ResponseEntity<List<Assignment>> getAllAssignments(@PathVariable String employeeId){
+    public ResponseEntity<List<AssignmentDTO>> getAllAssignments(@PathVariable String employeeId){
 
         return new ResponseEntity<>(assignmentService.getAllAssignments(employeeId),HttpStatus.OK);
 
     }
     @GetMapping("/{employeeId}/{assignmentId}")
-    public ResponseEntity<Assignment> getAssignment(@PathVariable String employeeId, @PathVariable Long assignmentId){
+    public ResponseEntity<AssignmentDTO> getAssignment(@PathVariable String employeeId, @PathVariable Long assignmentId){
         return new ResponseEntity<>(assignmentService.getAssignment(employeeId,assignmentId),HttpStatus.OK);
     }
 
-    @PutMapping("/{employeeId}/{assignmentId}")
-    public ResponseEntity<String> updateAssignment(@PathVariable String employeeId,
-                                                   @PathVariable Long assignmentId,
-                                                   @RequestBody Assignment assignment){
-        return new ResponseEntity<>(assignmentService.updateAssignment(employeeId,assignmentId,assignment),HttpStatus.CREATED);
+    @PutMapping("/{assignmentId}")
+    public ResponseEntity<String> updateAssignment(@PathVariable  Long assignmentId,
+                                                   @RequestBody AssignmentDTO assignmentDTO){
+        return new ResponseEntity<>(assignmentService.updateAssignment(assignmentId,assignmentDTO),HttpStatus.CREATED);
+    }
+    @DeleteMapping("/{assignmentId}")
+    public ResponseEntity<String> deleteAssignment(@PathVariable  Long assignmentId){
+        return new ResponseEntity<>(assignmentService.deleteAssignment(assignmentId),HttpStatus.OK);
     }
 
 }

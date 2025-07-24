@@ -1,13 +1,15 @@
 package com.hrms.project.service;
 
+import com.hrms.project.dto.SkillsDTO;
 import com.hrms.project.entity.Achievements;
+
 import com.hrms.project.entity.Employee;
-//import com.hrms.project.entity.Skills;
+import com.hrms.project.handlers.APIException;
 import com.hrms.project.handlers.EmployeeNotFoundException;
 import com.hrms.project.dto.AchievementsDTO;
 import com.hrms.project.repository.AchievementsRepository;
 import com.hrms.project.repository.EmployeeRepository;
-//import com.hrms.project.repository.SkillsRepository;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,6 +77,20 @@ public class AchievementsServiceImpl {
 
     }
 
+    public AchievementsDTO getAchievement(String employeeId,Long achievementId) {
+
+        Employee employee=employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + employeeId));
+
+        Achievements achievements=achievementsRepository.findById(achievementId)
+                .orElseThrow(()->new APIException("Achievement not found with id " + achievementId));
+
+        return modelMapper.map(achievements,AchievementsDTO.class);
+
+
+
+    }
+
 
     public AchievementsDTO updateAchievements(String employeeId, Long certificateId,
                                               MultipartFile image, AchievementsDTO achievementsDTO) throws IOException {
@@ -117,49 +133,52 @@ public class AchievementsServiceImpl {
 
     }
 
+    public SkillsDTO addSkills(String employeeId, SkillsDTO resumeDTO) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + employeeId));
+        if (employee.getSkills() != null && !employee.getSkills().isEmpty()) {
+            throw new APIException("Skills already exist for this employee cannot add again.");
+        }
+        modelMapper.map(resumeDTO,employee);
+        employeeRepository.save(employee);
+        return modelMapper.map(employee, SkillsDTO.class);
 
-//    public Skills addSkills(String employeeId, Skills skills) {
-//        Employee employee = employeeRepository.findById(employeeId)
-//                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + employeeId));
-//
-//        skills.setEmployee(employee);
-//        return skillsRepository.save(skills);
-//    }
-//
-//    public List<Skills> getSkills(String employeeId) {
-//        Employee employee = employeeRepository.findById(employeeId)
-//                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + employeeId));
-//
-//        return employee.getSkills(); // Assuming a OneToMany mapping in Employee entity
-//    }
-//
-//    public Skills updateSkills(String employeeId, Long skillId, Skills updatedSkill) {
-//        Employee employee = employeeRepository.findById(employeeId)
-//                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + employeeId));
-//
-//        Skills skillToUpdate = employee.getSkills().stream()
-//                .filter(skill -> skill.getSkillid().equals(skillId))
-//                .findFirst()
-//                .orElseThrow(() -> new RuntimeException("Skill with ID " + skillId + " not found."));
-//
-//        skillToUpdate.setSkillname(updatedSkill.getSkillname());
-//        skillToUpdate.setSkillProficiency(updatedSkill.getSkillProficiency());
-//
-//        return skillsRepository.save(skillToUpdate);
-//    }
-//
-//    public Skills deleteSkills(String employeeId, Long skillId) {
-//        Employee employee = employeeRepository.findById(employeeId)
-//                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + employeeId));
-//
-//        Skills skillToDelete = employee.getSkills().stream()
-//                .filter(skill -> skill.getSkillid().equals(skillId))
-//                .findFirst()
-//                .orElseThrow(() -> new RuntimeException("Skill with ID " + skillId + " not found."));
-//
-//        skillsRepository.delete(skillToDelete);
-//        return skillToDelete;
-//    }
+    }
+
+    public SkillsDTO updateSkills(String employeeId, SkillsDTO resumeDTO) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + employeeId));
+        modelMapper.map(resumeDTO,employee);
+        employeeRepository.save(employee);
+        return modelMapper.map(employee, SkillsDTO.class);
+
+    }
+
+    public SkillsDTO getSkills(String employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + employeeId));
+
+        SkillsDTO resumeDTO = modelMapper.map(employee, SkillsDTO.class);
+        resumeDTO.setSkills(employee.getSkills());
+
+        return resumeDTO;
+    }
+
+    public SkillsDTO deleteSkills(String employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + employeeId));
+        if (employee.getSkills() == null || employee.getSkills().isEmpty()) {
+            throw new APIException("No skills found to delete for this employee.");
+        }
+
+        employee.setSkills(null);
+        employeeRepository.save(employee);
+
+        SkillsDTO resumeDTO = modelMapper.map(employee, SkillsDTO.class);
+        resumeDTO.setSkills(employee.getSkills());
+
+        return resumeDTO;
+    }
 
 
 }

@@ -20,7 +20,7 @@ public class Team {
     private String teamName;
     private String teamDescription;
 
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(
             name = "team_employee",
             joinColumns = @JoinColumn(name = "team_id"),
@@ -28,6 +28,6 @@ public class Team {
     )
     private Set<Employee> employees = new HashSet<>();
 
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<Project> projects = new ArrayList<>();
 }

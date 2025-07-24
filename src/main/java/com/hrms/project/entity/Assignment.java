@@ -24,8 +24,12 @@ public class Assignment {
 
     private String assignmentName;
     private String assignmentDescription;
+    private String assignedBy;
+    private String status;
+    private String priority;
+
     private LocalDate  startDate;
-    private LocalDate  endDate;
+    private LocalDate  dueDate;
     private Integer rating;
     private String remark;
 
@@ -33,5 +37,10 @@ public class Assignment {
     @JoinColumn(name="employee_id")
      @JsonBackReference
     private Employee employee;
+
+    @ManyToOne
+    @JoinColumn(name="project_id")
+    @JsonBackReference
+    private Project project;
 
 }

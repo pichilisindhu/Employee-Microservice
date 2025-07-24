@@ -15,18 +15,11 @@ import java.io.IOException;
 import java.util.List;
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:5174")
+//@CrossOrigin(origins = "http://localhost:5173/")
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
-
-    @Autowired
-    private FileService fileService;
-
-
-    @Value("${project.image}")
-    private String path;
 
    // @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'MANAGER', 'TEAM_LEAD')")
     @PostMapping("/employee")

@@ -62,8 +62,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         if (employeeImage != null && !employeeImage.isEmpty()) {
             String fileName = fileService.uploadImage(path, employeeImage);
-            String imageUrl = "/images/" + fileName;
-            employee.setEmployeeImage(imageUrl);
+            employee.setEmployeeImage(fileName);
         }
 
         if (employeeDTO.getDepartmentId() != null) {
@@ -72,16 +71,10 @@ public class EmployeeServiceImpl implements EmployeeService {
             employee.setDepartment(dept);
         }
 
-        employeeRepository.save(employee);
+        System.out.println(employeeRepository.save(employee));
+
         return modelMapper.map(employee, EmployeeDTO.class);
 
-
-//        if (employeeDTO.getHeadOfDepartment() != null && !employeeDTO.getHeadOfDepartment().isEmpty()) {
-//            Department dept = departmentRepository.findByDepartmentName(employeeDTO.getDepartmentName())
-//                    .orElseThrow(()->new DepartmentNotFoundException("Department not found with name: " + employeeDTO.getDepartmentName()));
-//            dept.setHeadOfDepartment(employeeDTO.getHeadOfDepartment());
-//            employee.setDepartment(dept);
-//        }
 
     }
 
@@ -117,21 +110,32 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee updateEmployee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
 
-        String existingImage=updateEmployee.getEmployeeImage();
-        modelMapper.map(employeeDTO, updateEmployee);
+        if (employeeDTO.getDepartmentId() != null) {
 
+            updateEmployee.setDepartment(null);
+            employeeRepository.save(updateEmployee);
+
+            Department department = departmentRepository.findById(employeeDTO.getDepartmentId())
+                    .orElseThrow(() -> new DepartmentNotFoundException("Department not found with id: " + employeeDTO.getDepartmentId()));
+            updateEmployee.setDepartment(department);
+        }
+
+        String existingImage = updateEmployee.getEmployeeImage();
+        modelMapper.map(employeeDTO, updateEmployee);
         if (employeeImage != null && !employeeImage.isEmpty()) {
             String fileName = fileService.uploadImage(path, employeeImage);
             updateEmployee.setEmployeeImage(fileName);
-        }else{
+        } else {
             updateEmployee.setEmployeeImage(existingImage);
         }
 
-       employeeRepository.save(updateEmployee);
 
+
+        employeeRepository.save(updateEmployee);
 
         return modelMapper.map(updateEmployee, EmployeeDTO.class);
     }
+
 
     @Override
     public ContactDetailsDTO getEmployeeContactDetails(String employeeId) {
@@ -249,21 +253,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 }
 
-
-//    List<String> projectNames = employee.getProjects()
-//            .stream()
-//            .map(Project -> Project.getTitle())
-//                    .toList();
-//
-//        employeeDTO.setProjects(projectNames);
-
-
-//            List<String> projectNames = employee.getProjects()
-//                    .stream()
-//                    .map(Project-> Project.getTitle())
-//                    .toList();
-//
-//            employeeDTO.setProjectNames(projectNames);
 
 
 

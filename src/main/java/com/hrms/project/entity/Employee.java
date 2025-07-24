@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -48,6 +50,9 @@ public class Employee {
     private String zip;
     private String country;
 
+    private LocalDateTime shiftStartTime;
+    private LocalDateTime shiftEndTime;
+
     private String employeeImage;
 
     private LocalDate dateOfBirth;
@@ -75,10 +80,11 @@ public class Employee {
     )
     private List<Project> projects = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "department_id")
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "department_id", nullable = true)
     @JsonBackReference
     private Department department;
+
 
     @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
