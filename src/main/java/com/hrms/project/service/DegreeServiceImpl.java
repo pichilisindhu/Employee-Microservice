@@ -91,7 +91,7 @@ public class DegreeServiceImpl {
     }
 
 
-    public DegreeCertificates deleteById(String employeeId, Long id) {
+    public DegreeCertificates deleteById(String employeeId, String id) {
         Employee employee=employeeRepository.findById(employeeId)
                 .orElseThrow(()-> new EmployeeNotFoundException("Employee not found"));
 

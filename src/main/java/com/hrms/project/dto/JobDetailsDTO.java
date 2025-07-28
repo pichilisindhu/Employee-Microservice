@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -24,6 +25,8 @@ public class JobDetailsDTO {
     private String timeType;
     private String contractStatus;
     private LocalDate contractStartDate;
+    private LocalDateTime shiftStartTime;
+    private LocalDateTime shiftEndTime;
 
 
 

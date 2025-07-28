@@ -9,30 +9,32 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 @RestController
 @RequestMapping("/api")
-//@CrossOrigin(origins = "http://localhost:5173/")
+@CrossOrigin(origins = "http://localhost:5173/")
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
 
-   // @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'MANAGER', 'TEAM_LEAD')")
+  // @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'MANAGER', 'TEAM_LEAD')")
     @PostMapping("/employee")
-    public ResponseEntity<EmployeeDTO> createEmployee(@RequestPart(value = "employeeImage", required = false) MultipartFile employeeImage,
-                                                       @Valid @RequestPart(value = "employee") EmployeeDTO employeeDTO) throws IOException {
-        EmployeeDTO saved = employeeService.createData(employeeImage, employeeDTO);
+    public ResponseEntity<EmployeeDTO> createEmployee(
+                                     @RequestPart(value = "employeeImage", required = false) MultipartFile employeeImage,
+                                      @Valid @RequestPart(value = "employee") EmployeeDTO employeeDTO) throws IOException {
+        EmployeeDTO saved = employeeService.createData(employeeImage,employeeDTO);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
 
 
 
-   // @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'MANAGER', 'TEAM_LEAD', 'EMPLOYEE')")
+ //  @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'MANAGER', 'TEAM_LEAD', 'EMPLOYEE')")
     @GetMapping("/employee/{employeeId}/contact")
     public ResponseEntity<ContactDetailsDTO> getContactDetails(@PathVariable String employeeId) {
         ContactDetailsDTO contactDetailsDTO = employeeService.getEmployeeContactDetails(employeeId);
@@ -122,7 +124,7 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeDetails, HttpStatus.OK);
     }
 
-//    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'MANAGER')")
+// @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'MANAGER')")
     @GetMapping("/employees")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
         List<EmployeeDTO> employeeResponse = employeeService.getAllEmployees();

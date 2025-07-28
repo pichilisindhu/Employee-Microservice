@@ -30,8 +30,8 @@ public class VoterDetails {
     private String uploadVoter;
 
     @OneToOne
-    @JoinColumn(name = "employee_id", referencedColumnName = "employeeId")
-    @JsonBackReference
+    @JoinColumn(name = "employee_id")
+    @JsonBackReference("voter")
     private Employee employee;
 
 }

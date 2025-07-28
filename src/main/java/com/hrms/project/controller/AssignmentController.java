@@ -34,17 +34,17 @@ public class AssignmentController {
 
     }
     @GetMapping("/{employeeId}/{assignmentId}")
-    public ResponseEntity<AssignmentDTO> getAssignment(@PathVariable String employeeId, @PathVariable Long assignmentId){
+    public ResponseEntity<AssignmentDTO> getAssignment(@PathVariable String employeeId, @PathVariable String assignmentId){
         return new ResponseEntity<>(assignmentService.getAssignment(employeeId,assignmentId),HttpStatus.OK);
     }
 
     @PutMapping("/{assignmentId}")
-    public ResponseEntity<String> updateAssignment(@PathVariable  Long assignmentId,
+    public ResponseEntity<String> updateAssignment(@PathVariable  String assignmentId,
                                                    @RequestBody AssignmentDTO assignmentDTO){
         return new ResponseEntity<>(assignmentService.updateAssignment(assignmentId,assignmentDTO),HttpStatus.CREATED);
     }
     @DeleteMapping("/{assignmentId}")
-    public ResponseEntity<String> deleteAssignment(@PathVariable  Long assignmentId){
+    public ResponseEntity<String> deleteAssignment(@PathVariable  String assignmentId){
         return new ResponseEntity<>(assignmentService.deleteAssignment(assignmentId),HttpStatus.OK);
     }
 

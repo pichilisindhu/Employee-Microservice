@@ -35,7 +35,7 @@ public class AchievementsController {
     }
 
     @GetMapping("/{employeeId}/{achievementId}/achievement")
-    public ResponseEntity<AchievementsDTO> getAchievement(@PathVariable String employeeId,@PathVariable Long achievementId) {
+    public ResponseEntity<AchievementsDTO> getAchievement(@PathVariable String employeeId,@PathVariable String achievementId) {
         return new ResponseEntity<>(achievementsServiceImpl.getAchievement(employeeId,achievementId),HttpStatus.OK);
     }
 
@@ -48,8 +48,8 @@ public class AchievementsController {
     }
 
     @DeleteMapping("/{employeeId}/{certificateId}/achievements")
-    public ResponseEntity<AchievementsDTO> deleteAchievements(@PathVariable String employeeId, @PathVariable  Long certificateId) {
-        return new ResponseEntity<>(achievementsServiceImpl.deleteAchievements(employeeId,certificateId),HttpStatus.OK);
+    public ResponseEntity<AchievementsDTO> deleteAchievements(@PathVariable String employeeId, @PathVariable  String achievementId) {
+        return new ResponseEntity<>(achievementsServiceImpl.deleteAchievements(employeeId,achievementId),HttpStatus.OK);
     }
 
 
@@ -77,6 +77,8 @@ public class AchievementsController {
     }
 
     }
+
+
 
 
 

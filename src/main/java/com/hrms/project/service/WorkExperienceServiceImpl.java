@@ -33,7 +33,9 @@ public class WorkExperienceServiceImpl {
     @Autowired
     private ModelMapper modelMapper;
 
-    public WorkExperienceDetails createExperenceByEmployeId(String employeeId, MultipartFile uploadImage, WorkExperienceDetails workExperienceDetails) throws IOException {
+    public WorkExperienceDetails createExperenceByEmployeId(String employeeId,
+                                                            MultipartFile uploadImage,
+                                                            WorkExperienceDetails workExperienceDetails) throws IOException {
         Employee employee = employeeRepository.findById(employeeId).orElseThrow(() ->
                 new EmployeeNotFoundException("Employee not found with id " + employeeId));
 
@@ -49,7 +51,7 @@ public class WorkExperienceServiceImpl {
     public WorkExperienceDetails updateExperience(String employeeId,
                                                   MultipartFile uploadImage,
                                                   WorkExperienceDetails updatedData,
-                                                  Long id) throws IOException {
+                                                  String id) throws IOException {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with ID: " + employeeId));
 
@@ -86,7 +88,7 @@ public class WorkExperienceServiceImpl {
                 .toList();
     }
 
-    public WorkExperienceDetails deleteExperienceById(String employeeId, Long id) {
+    public WorkExperienceDetails deleteExperienceById(String employeeId, String id) {
         Employee employee=employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + employeeId));
 

@@ -19,8 +19,8 @@ import java.time.LocalDate;
 public class Assignment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long assignmentId;
+
+    private String assignmentId;
 
     private String assignmentName;
     private String assignmentDescription;
@@ -35,7 +35,7 @@ public class Assignment {
 
     @ManyToOne
     @JoinColumn(name="employee_id")
-     @JsonBackReference
+     @JsonBackReference("assignment")
     private Employee employee;
 
     @ManyToOne

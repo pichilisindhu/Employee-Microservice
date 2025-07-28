@@ -40,13 +40,9 @@ public class IdentityDetailsController {
     private WorkExperienceServiceImpl workExperienceServiceImpl;
 
 
-//    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'EMPLOYEE')")
-    @PostMapping("/aadhaar/{employeeId}")
-    public ResponseEntity<AadhaarCardDetails> save(@PathVariable String employeeId, @RequestPart(value = "aadhaarImage", required = false) MultipartFile aadhaarImage,
-                                                   @RequestPart AadhaarCardDetails aadhaarCardDetails) throws IOException {
 
-        return new ResponseEntity<>(aadhaarServiceImpl.createAadhaar(employeeId,aadhaarImage,aadhaarCardDetails), HttpStatus.CREATED);
-    }
+
+
 //    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'EMPLOYEE')")
     @GetMapping("/{employeeId}/aadhaar")
     public ResponseEntity<AadhaarDTO>getAadhaar(@PathVariable String employeeId){
@@ -58,8 +54,8 @@ public class IdentityDetailsController {
     @PutMapping("/{employeeId}/aadhaar")
     public ResponseEntity<AadhaarCardDetails>updateAadhaar(@PathVariable String employeeId,
                                                            @RequestPart(value="aadhaarImage", required = false) MultipartFile aadhaarImage,
-                                                           @RequestPart AadhaarCardDetails aadhaarDTO) throws IOException{
-        AadhaarCardDetails dto = aadhaarServiceImpl.updateAadhaar(employeeId,aadhaarImage,aadhaarDTO);
+                                                           @RequestPart(value="aadhaar") AadhaarCardDetails aadhaar) throws IOException{
+        AadhaarCardDetails dto = aadhaarServiceImpl.updateAadhaar(employeeId,aadhaarImage,aadhaar);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
@@ -70,6 +66,16 @@ public class IdentityDetailsController {
         return new ResponseEntity<>(aadhaarCardDetails,HttpStatus.OK);
     }
 
+
+    //    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'EMPLOYEE')")
+    @PostMapping("/aadhaar/{employeeId}")
+    public ResponseEntity<AadhaarCardDetails> save(@PathVariable String employeeId,
+                                                   @RequestPart(value = "aadhaarImage", required = false) MultipartFile aadhaarImage,
+                                                   @RequestPart(value="aadhaar") AadhaarCardDetails aadhaarCardDetails)
+            throws IOException {
+
+        return new ResponseEntity<>(aadhaarServiceImpl.createAadhaar(employeeId,aadhaarImage,aadhaarCardDetails), HttpStatus.CREATED);
+    }
 
 
 //    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'EMPLOYEE')")
@@ -205,7 +211,7 @@ public class IdentityDetailsController {
 //    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'EMPLOYEE')")
     @PutMapping("/{employeeId}/previousExperience/{id}")
     public ResponseEntity<WorkExperienceDetails>updateExperience(@PathVariable String employeeId,@RequestPart(value = "uploadImage",required = false)MultipartFile uploadImage,
-                                                                 @RequestPart WorkExperienceDetails workExperienceDetails,@PathVariable Long id) throws IOException
+                                                                 @RequestPart WorkExperienceDetails workExperienceDetails,@PathVariable String id) throws IOException
     {
         WorkExperienceDetails workExperienceDetails1=workExperienceServiceImpl.updateExperience(employeeId,uploadImage,workExperienceDetails,id);
         return new ResponseEntity<>(workExperienceDetails1,HttpStatus.CREATED);
@@ -221,7 +227,7 @@ public class IdentityDetailsController {
 //    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/{employeeId}/previousExperience/{id}")
     public ResponseEntity<WorkExperienceDetails>deleteExperience(@PathVariable String employeeId,
-                                                                 @PathVariable Long id){
+                                                                 @PathVariable String id){
         return new ResponseEntity<>(workExperienceServiceImpl.deleteExperienceById(employeeId,id),HttpStatus.OK);
     }
 
@@ -231,7 +237,7 @@ public class IdentityDetailsController {
     @PostMapping("/{employeeId}/degreeDetails")
     public ResponseEntity<DegreeCertificates>addDegree(@PathVariable String employeeId,
                                                        @RequestPart(value = "addFiles",required = false)MultipartFile addFiles,
-                                                       @RequestPart("degree") DegreeCertificates degreeCertificates ) throws IOException {
+                                                       @RequestPart(value="degree") DegreeCertificates degreeCertificates ) throws IOException {
         DegreeCertificates degree=degreeServiceImpl.addDegree(employeeId,addFiles,degreeCertificates);
         return new ResponseEntity<>(degree,HttpStatus.CREATED);
     }
@@ -255,7 +261,7 @@ public class IdentityDetailsController {
 //    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/{employeeId}/degreeDetails/{id}")
     public ResponseEntity<DegreeCertificates>deleteDegree(@PathVariable String employeeId,
-                                                          @PathVariable Long id){
+                                                          @PathVariable String id){
         return new ResponseEntity<>(degreeServiceImpl.deleteById(employeeId,id),HttpStatus.OK);
 
     }

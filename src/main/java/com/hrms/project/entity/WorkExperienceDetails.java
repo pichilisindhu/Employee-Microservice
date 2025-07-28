@@ -16,8 +16,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class WorkExperienceDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
+    private String id;
     private String companyName;
     private String jobTitle;
     private String location;
@@ -30,7 +30,7 @@ public class WorkExperienceDetails {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id")
-    @JsonBackReference
+    @JsonBackReference("work")
     private Employee employee;
 
 

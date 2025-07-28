@@ -24,8 +24,8 @@ public class EmployeePrimaryDetailsDTO {
     private String nationality;
     private String gender;
     private LocalDate dateOfBirth;
-    private String employeeImage;
- private LocalDateTime shiftStartTime;
- private LocalDateTime shiftEndTime;
+//    private String employeeImage;
+// private LocalDateTime shiftStartTime;
+// private LocalDateTime shiftEndTime;
 
 }

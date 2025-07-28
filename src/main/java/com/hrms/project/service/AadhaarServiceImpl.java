@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 public class AadhaarServiceImpl {
@@ -38,11 +39,12 @@ public class AadhaarServiceImpl {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("employee not found with id: " + employeeId));
 
-        if (aadhaarDetailsRepository.findByEmployee_EmployeeId(employeeId) != null) {
+        if (aadhaarDetailsRepository.findByEmployee_EmployeeId(employeeId)!=null) {
             throw new APIException("This employee already has Aadhaar assigned");
         }
 
         AadhaarCardDetails cardDetails;
+        System.out.println(aadhaarCardDetails);
 
         if (aadhaarDetailsRepository.findById(aadhaarCardDetails.getAadhaarNumber()).isEmpty()) {
 
@@ -53,6 +55,7 @@ public class AadhaarServiceImpl {
 
             aadhaarCardDetails.setEmployee(employee);
             cardDetails = aadhaarDetailsRepository.save(aadhaarCardDetails);
+            System.out.println(aadhaarCardDetails);
 
         } else {
             AadhaarCardDetails details = aadhaarDetailsRepository.findById(aadhaarCardDetails.getAadhaarNumber()).get();
@@ -64,10 +67,10 @@ public class AadhaarServiceImpl {
                 throw new APIException("Current Aadhaar card is already assigned to another employee");
             }
         }
+        System.out.println(aadhaarCardDetails);
 
         return cardDetails;
     }
-
 
     public AadhaarDTO getAadhaarByEmployeeId(String employeeId) {
 
@@ -127,4 +130,6 @@ public class AadhaarServiceImpl {
         aadhaarDetailsRepository.deleteById(aadhaarDetails.getAadhaarNumber());
         return aadhaarDetails;
     }
+
+
 }

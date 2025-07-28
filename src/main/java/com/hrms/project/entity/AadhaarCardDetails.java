@@ -18,7 +18,6 @@ public class AadhaarCardDetails {
 
     @Id
     private String aadhaarNumber;
-
     private String enrollmentNumber;
     private LocalDate dateOfBirth;
     private String aadhaarName;
@@ -27,7 +26,8 @@ public class AadhaarCardDetails {
     private String uploadAadhaar;
 
     @OneToOne
-    @JoinColumn(name = "employee_id", referencedColumnName = "employeeId")
-    @JsonBackReference
+    @JoinColumn(name = "employee_id")
+    @JsonBackReference("aadhaar-ref")
     private Employee employee;
+
 }

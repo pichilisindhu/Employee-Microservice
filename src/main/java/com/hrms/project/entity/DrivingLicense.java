@@ -34,6 +34,6 @@ public class DrivingLicense {
 
     @OneToOne
     @JoinColumn(name = "employee_id")
-    @JsonBackReference
+    @JsonBackReference("driving")
     private Employee employee;
 }

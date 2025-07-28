@@ -1,16 +1,10 @@
 package com.hrms.project.service;
-import com.hrms.project.entity.Department;
-import com.hrms.project.entity.Employee;
-import com.hrms.project.entity.Project;
-import com.hrms.project.entity.Team;
+import com.hrms.project.entity.*;
 import com.hrms.project.handlers.APIException;
 import com.hrms.project.handlers.DepartmentNotFoundException;
 import com.hrms.project.handlers.EmployeeNotFoundException;
 import com.hrms.project.dto.*;
-import com.hrms.project.repository.DepartmentRepository;
-import com.hrms.project.repository.EmployeeRepository;
-import com.hrms.project.repository.ProjectRepository;
-import com.hrms.project.repository.TeamRepository;
+import com.hrms.project.repository.*;
 import org.modelmapper.ModelMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -37,10 +32,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private DepartmentRepository departmentRepository;
 
     @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private TeamRepository teamRepository;
+    private ArchiveRepository archiveRepository;
 
     @Autowired
     private FileService fileService;
@@ -50,9 +42,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public EmployeeDTO createData(MultipartFile employeeImage, EmployeeDTO employeeDTO) throws IOException {
+    public EmployeeDTO createData(MultipartFile employeeImage,EmployeeDTO employeeDTO) throws IOException {
 
-        System.out.println("Received DTO: " + employeeDTO);
 
         if (employeeRepository.findById(employeeDTO.getEmployeeId()).isPresent()) {
             throw new APIException("Employee already exists");
@@ -71,7 +62,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             employee.setDepartment(dept);
         }
 
-        System.out.println(employeeRepository.save(employee));
+        employeeRepository.save(employee);
 
         return modelMapper.map(employee, EmployeeDTO.class);
 
@@ -83,9 +74,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeDTO getEmployeeById(String id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
-        EmployeeDTO employeeDTO = modelMapper.map(employee, EmployeeDTO.class);
+        return modelMapper.map(employee, EmployeeDTO.class);
 
-        return employeeDTO;
+
 
     }
 
@@ -130,7 +121,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
 
-
         employeeRepository.save(updateEmployee);
 
         return modelMapper.map(updateEmployee, EmployeeDTO.class);
@@ -142,9 +132,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Employee employeeDetails=employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + employeeId));
+          return modelMapper.map(employeeDetails, ContactDetailsDTO.class);
 
-        ContactDetailsDTO contactDetailsDTO = modelMapper.map(employeeDetails, ContactDetailsDTO.class);
-        return contactDetailsDTO;
 
     }
 
@@ -226,31 +215,78 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
-
+    @Override
     public EmployeeDTO deleteEmployee(String employeeId) {
-            Employee employee = employeeRepository.findById(employeeId)
-                    .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + employeeId));
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + employeeId));
+
+        employee.setDateOfLeaving(LocalDate.now());
+        employeeRepository.save(employee);
 
 
-            for (Team team : employee.getTeams()) {
+        Archive archive=  modelMapper.map(employee,Archive.class);
+
+        if (employee.getAadhaarCardDetails() != null) {
+            archive.setAadharNumber(employee.getAadhaarCardDetails().getAadhaarNumber());
+            archive.setAadharImage(employee.getAadhaarCardDetails().getUploadAadhaar());
+        }
+
+        if (employee.getPanDetails() != null) {
+            archive.setPanNumber(employee.getPanDetails().getPanNumber());
+            archive.setPanImage(employee.getPanDetails().getPanImage());
+        }
+
+        if (employee.getPassportDetails() != null) {
+            archive.setPassportNumber(employee.getPassportDetails().getPassportNumber());
+            archive.setPassportImage(employee.getPassportDetails().getPassportImage());
+        }
+
+        if (employee.getDepartment() != null) {
+            archive.setDepartmentId(employee.getDepartment().getDepartmentId());
+        }
+
+        List<DegreeCertificates> documents = employee.getDegreeCertificates();
+        if (documents != null && !documents.isEmpty()) {
+            archive.setDegreeDocuments(
+                    documents.stream().map(DegreeCertificates::getAddFiles).toList()
+            );
+        }
+
+        List<Project> projects = employee.getProjects();
+        if (projects != null && !projects.isEmpty()) {
+            archive.setProjectId(
+                    projects.stream().map(Project::getProjectId).toList()
+            );
+        }
+
+        List<Team> teams = employee.getTeams();
+        if (teams != null && !teams.isEmpty()) {
+            archive.setTeamId(
+                    teams.stream().map(Team::getTeamId).toList()
+            );
+        }
+
+        archiveRepository.save(archive);
+
+
+        if (teams != null) {
+            for (Team team : teams) {
                 team.getEmployees().remove(employee);
             }
+            employee.getTeams().clear();
+        }
 
-
-            for (Project project : employee.getProjects()) {
+        if (projects != null) {
+            for (Project project : projects) {
                 project.getEmployees().remove(employee);
             }
-
-
-            employee.getTeams().clear();
             employee.getProjects().clear();
+        }
 
-
-            employeeRepository.delete(employee);
+        employeeRepository.delete(employee);
 
         return modelMapper.map(employee, EmployeeDTO.class);
     }
-
 }
 
 

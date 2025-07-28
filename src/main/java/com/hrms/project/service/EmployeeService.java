@@ -12,7 +12,9 @@ import java.util.List;
 @Component
 public interface EmployeeService {
 
-    EmployeeDTO createData(MultipartFile employeeImage, EmployeeDTO employeeDTO) throws IOException;
+    EmployeeDTO createData(
+            MultipartFile employeeImage,
+            EmployeeDTO employeeDTO) throws IOException;
 
     EmployeeDTO getEmployeeById(String id);
 

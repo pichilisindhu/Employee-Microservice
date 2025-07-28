@@ -49,6 +49,7 @@ public class EmployeeDTO {
     private String district;
 
     private LocalDate dateOfJoining;
+    private LocalDate dateOfLeaving;
     private String jobTitlePrimary;
     private String jobTitleSecondary;
     private String inProbation;

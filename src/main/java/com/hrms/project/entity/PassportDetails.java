@@ -35,6 +35,6 @@ public class PassportDetails {
 
     @OneToOne
  @JoinColumn(name="employee_id")
-    @JsonBackReference
+    @JsonBackReference("passport")
     private Employee employee;
 }

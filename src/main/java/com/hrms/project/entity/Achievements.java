@@ -17,8 +17,8 @@ import java.time.LocalDate;
 public class Achievements {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+
+    private String id;
     private String certificationName;
     private String issuingAuthorityName;
     private String certificationURL;
@@ -31,7 +31,7 @@ public class Achievements {
 
     @ManyToOne
     @JoinColumn(name="employee_id")
-    @JsonBackReference
+    @JsonBackReference("achieve")
     private Employee employee;
 
 

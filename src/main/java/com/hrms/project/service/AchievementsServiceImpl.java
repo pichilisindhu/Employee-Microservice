@@ -55,8 +55,8 @@ public class AchievementsServiceImpl {
             String img = fileService.uploadImage(path, image);
             newAchievements.setAchievementFile(img);
         }
-        AchievementsDTO achievements=modelMapper.map(achievementsRepository.save(newAchievements),AchievementsDTO.class);
-        return achievements;
+        return modelMapper.map(achievementsRepository.save(newAchievements),AchievementsDTO.class);
+
     }
 
     public List<AchievementsDTO> getCertifications(String employeeId) {
@@ -66,18 +66,18 @@ public class AchievementsServiceImpl {
 
         List<Achievements> achievements=employee.getAchievements();
 
-        List<AchievementsDTO> details=achievements.stream().map(achieve->
+     return achievements.stream().map(achieve->
         {
             return modelMapper.map(achieve,AchievementsDTO.class);
         }).toList();
 
-        return details;
+
 
 
 
     }
 
-    public AchievementsDTO getAchievement(String employeeId,Long achievementId) {
+    public AchievementsDTO getAchievement(String employeeId,String achievementId) {
 
         Employee employee=employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + employeeId));
@@ -114,7 +114,7 @@ public class AchievementsServiceImpl {
         return modelMapper.map(achievementToUpdate, AchievementsDTO.class);
     }
 
-    public AchievementsDTO deleteAchievements(String employeeId, Long certificateId) {
+    public AchievementsDTO deleteAchievements(String employeeId, String certificateId) {
 
 
         Employee employee = employeeRepository.findById(employeeId)

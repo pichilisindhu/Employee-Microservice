@@ -27,6 +27,6 @@ public class PanDetails {
 
     @OneToOne
     @JoinColumn(name = "employee_id")
-    @JsonBackReference
+    @JsonBackReference("pan")
     private Employee employee;
 }

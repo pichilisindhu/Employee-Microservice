@@ -57,6 +57,7 @@ public class Employee {
 
     private LocalDate dateOfBirth;
     private LocalDate dateOfJoining;
+    private LocalDate dateOfLeaving;
     private String inProbation;
     private LocalDate probationStartDate;
     private LocalDate probationEndDate;
@@ -87,41 +88,39 @@ public class Employee {
 
 
     @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("aadhaar-ref")
     private AadhaarCardDetails aadhaarCardDetails;
 
     @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("pan")
     private PanDetails panDetails;
 
     @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("driving")
     private DrivingLicense drivingLicense;
 
     @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("passport")
     private PassportDetails passportDetails;
 
     @OneToOne(mappedBy = "employee",cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("voter")
     private VoterDetails voterDetails;
 
     @OneToMany(mappedBy="employee",cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("degree")
     private List<DegreeCertificates> degreeCertificates;
 
     @OneToMany(mappedBy = "employee",cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("work")
     private List<WorkExperienceDetails>workExperienceDetails;
 
-
-
     @OneToMany(mappedBy="employee",cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("achieve")
     private List<Achievements> achievements;
 
     @OneToMany(mappedBy = "employee",cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("assignment")
     private List<Assignment> assignments;
 
 //    @OneToMany(mappedBy = "employee")
@@ -131,8 +130,3 @@ public class Employee {
 
 
 }
-
-
-
-
-

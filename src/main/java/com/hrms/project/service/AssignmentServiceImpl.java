@@ -83,7 +83,7 @@ public class AssignmentServiceImpl {
     }
 
 
-    public AssignmentDTO getAssignment(String employeeId, Long assignmentId) {
+    public AssignmentDTO getAssignment(String employeeId, String assignmentId) {
         Employee employee = employeeRepository.findById(employeeId).orElseThrow(() ->
                 new EntityNotFoundException("Employee with id: " + employeeId + " not found"));
 
@@ -97,7 +97,7 @@ public class AssignmentServiceImpl {
 
     }
 
-    public String updateAssignment(Long assignmentId, AssignmentDTO assignmentDTO) {
+    public String updateAssignment(String assignmentId, AssignmentDTO assignmentDTO) {
 
         Employee employee = employeeRepository.findById(assignmentDTO.getEmployeeId()).orElseThrow(() ->
                 new EntityNotFoundException("Employee with id: " + assignmentDTO.getEmployeeId() + " not found"));
@@ -135,7 +135,7 @@ public class AssignmentServiceImpl {
         return "Assignment updated successfully";
     }
 
-    public String deleteAssignment(Long assignmentId) {
+    public String deleteAssignment(String assignmentId) {
 
         Assignment assignment=assignmentRepository.findById(assignmentId)
                 .orElseThrow(()->new AssignmentNotFound("Assignment not found with id: "+assignmentId));

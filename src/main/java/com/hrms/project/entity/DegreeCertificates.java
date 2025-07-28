@@ -16,9 +16,7 @@ import java.time.LocalDate;
 public class DegreeCertificates {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    private Long id;
+    private String id;
     private String degree;
     private String branchOrSpecialization;
     private LocalDate startMonth;
@@ -31,7 +29,8 @@ public class DegreeCertificates {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id")
-    @JsonBackReference
+    @JsonBackReference("degree")
     private Employee employee;
+
 
 }
