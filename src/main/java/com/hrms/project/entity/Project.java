@@ -35,5 +35,5 @@ public class Project {
     private List<Employee> employees;
 
     @OneToMany(mappedBy = "project",cascade = CascadeType.ALL)
-    private List<Assignment> assignments;
+    private List<Task> assignments;
 }

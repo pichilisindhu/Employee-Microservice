@@ -10,6 +10,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkExperienceDTO {
+
+    private String id;
     private String companyName;
     private String jobTitle;
     private String location;

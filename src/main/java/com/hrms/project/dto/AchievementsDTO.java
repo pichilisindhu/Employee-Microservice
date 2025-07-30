@@ -10,6 +10,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AchievementsDTO {
+
+    private String id;
     private String certificationName;
     private String issuingAuthorityName;
     private String certificationURL;

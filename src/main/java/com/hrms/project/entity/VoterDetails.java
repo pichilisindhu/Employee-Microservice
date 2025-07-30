@@ -20,12 +20,12 @@ import java.time.LocalDate;
 public class VoterDetails {
 
     @Id
-    private String voterIDNumber;
+    private String voterIdNumber;
     private String fullName;
     private String relationName;
     private String gender;
     private LocalDate dateOfBirth;
-    private String Address;
+    private String address;
     private LocalDate issuedDate;
     private String uploadVoter;
 

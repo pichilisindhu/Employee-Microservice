@@ -10,6 +10,7 @@ public interface VoterIdRepository extends JpaRepository<VoterDetails,String> {
 
 
     Optional<VoterDetails> findByEmployee_EmployeeId(String employeeId);
-    boolean existsByVoterIDNumber(String voterIDNumber);
+
+    //boolean existsByVoterIdNumber(String );
 }
 

@@ -37,6 +37,7 @@ public class DrivingLicenseServiceImpl {
     public DrivingLicense createDrivingLicense(String employeeId, MultipartFile licenseImage,
                                                DrivingLicense drivingLicense) throws IOException {
 
+
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with ID: " + employeeId));
 

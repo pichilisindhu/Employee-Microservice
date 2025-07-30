@@ -17,11 +17,11 @@ import java.util.*;
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = {
         "teams", "projects", "department","voterDetails",
-        "panDetails", "drivingLicense", "passportDetails", "aadhaarCardDetails","degreeCertificates","assignments"
+        "panDetails", "drivingLicense", "passportDetails", "aadhaarCardDetails","degreeCertificates","tasks"
 })
 @ToString(exclude = {
         "teams", "projects", "department","voterDetails",
-        "panDetails", "drivingLicense", "passportDetails", "aadhaarCardDetails","degreeCertificates","assignments"
+        "panDetails", "drivingLicense", "passportDetails", "aadhaarCardDetails","degreeCertificates","tasks"
 })
 public class Employee {
 
@@ -120,12 +120,9 @@ public class Employee {
     private List<Achievements> achievements;
 
     @OneToMany(mappedBy = "employee",cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("assignment")
-    private List<Assignment> assignments;
+    @JsonManagedReference("task")
+    private List<Task> tasks;
 
-//    @OneToMany(mappedBy = "employee")
-//    @JsonManagedReference
-//    private List<Skills> skills;
 
 
 

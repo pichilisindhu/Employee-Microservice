@@ -12,6 +12,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class VoterDTO {
 
+
+    private String voterIdNumber;
     private String fullName;
     private String relationName;
     private String gender;

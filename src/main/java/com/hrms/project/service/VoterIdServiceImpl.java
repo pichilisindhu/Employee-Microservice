@@ -34,6 +34,8 @@ public class VoterIdServiceImpl {
     private String path;
 
     public VoterDetails createVoter(String employeeId, MultipartFile voterImage, VoterDetails voterDetails) throws IOException {
+
+        System.out.println(voterDetails);
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + employeeId));
 
@@ -43,7 +45,7 @@ public class VoterIdServiceImpl {
 
         VoterDetails cardDetails;
 
-        if (voterIdRepository.findById(voterDetails.getVoterIDNumber()).isEmpty()) {
+        if (voterIdRepository.findById(voterDetails.getVoterIdNumber()).isEmpty()) {
             if (voterImage != null && !voterImage.isEmpty()) {
                 String fileName = fileService.uploadImage(path, voterImage);
                 voterDetails.setUploadVoter(fileName);
@@ -53,7 +55,7 @@ public class VoterIdServiceImpl {
             cardDetails = voterIdRepository.save(voterDetails);
 
         } else {
-            VoterDetails existing = voterIdRepository.findById(voterDetails.getVoterIDNumber()).get();
+            VoterDetails existing = voterIdRepository.findById(voterDetails.getVoterIdNumber()).get();
 
             if (existing.getEmployee() == null) {
                 existing.setEmployee(employee);
@@ -89,7 +91,7 @@ public class VoterIdServiceImpl {
             throw new APIException("Voter ID details not found for this employee");
         }
 
-        if (!existing.getVoterIDNumber().equals(voterDetails.getVoterIDNumber())) {
+        if (!existing.getVoterIdNumber().equals(voterDetails.getVoterIdNumber())) {
             throw new APIException("Voter ID number cannot be changed once submitted");
         }
 
@@ -119,7 +121,7 @@ public class VoterIdServiceImpl {
         }
         employee.setVoterDetails(null);
         employeeRepository.save(employee);
-        voterIdRepository.deleteById(voterDetails.getVoterIDNumber());
+        voterIdRepository.deleteById(voterDetails.getVoterIdNumber());
         return voterDetails;
     }
 }

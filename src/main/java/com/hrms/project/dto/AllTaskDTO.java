@@ -1,5 +1,6 @@
 package com.hrms.project.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,20 +12,10 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AssignmentDTO {
+public class AllTaskDTO {
 
-
-    private String assignmentName;
-    private String assignmentDescription;
-    private String assignedBy;
     private String status;
+    private String title;
     private String priority;
-
     private LocalDate startDate;
-    private LocalDate  dueDate;
-    private Integer rating;
-    private String remark;
-    private String employeeId;
-    private String projectId;
-
 }

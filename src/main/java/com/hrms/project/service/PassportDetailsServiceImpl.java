@@ -35,6 +35,8 @@ public class PassportDetailsServiceImpl {
 
     public PassportDetails createPassport(String employeeId, MultipartFile passportImage, PassportDetails passportDetails) throws IOException {
 
+
+        System.out.println(passportDetails);
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("employee not found with id: " + employeeId));
 

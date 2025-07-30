@@ -12,6 +12,7 @@ import java.time.LocalDate;
 public class DegreeDTO {
 
 
+    private String id;
     private String degree;
     private String branchOrSpecialization;
     private LocalDate startMonth;
