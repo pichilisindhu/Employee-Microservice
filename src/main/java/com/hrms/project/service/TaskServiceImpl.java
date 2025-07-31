@@ -47,7 +47,7 @@ public class TaskServiceImpl {
         Task task = modelMapper.map(taskDTO, Task.class);
 
         TaskId taskId = new TaskId(taskDTO.getId(), projectId);
-        task.setTaskId(taskId);
+        task.setId(taskId);
         task.setEmployee(employee);
         task.setProject(project);
 
@@ -60,12 +60,23 @@ public class TaskServiceImpl {
                 .orElseThrow(() -> new EntityNotFoundException("Employee not found"));
 
         return employee.getTasks().stream()
-                .map(task -> modelMapper.map(task, AllTaskDTO.class))
+                .map(task -> {
+                    AllTaskDTO dto = new AllTaskDTO();
+                    dto.setId(task.getId().getTaskId()); // only taskId goes here
+                    dto.setStatus(task.getStatus());
+                    dto.setTitle(task.getTitle());
+                    dto.setPriority(task.getPriority());
+                    dto.setStartDate(task.getCreatedDate());
+                    dto.setDueDate(task.getDueDate());
+                    return dto;
+                })
                 .toList();
     }
 
-    public String updateTask(TaskDTO taskDTO, String employeeId,String projectId,String taskId) {
-        TaskId compositeTaskId = new TaskId(taskId, projectId);
+
+
+    public String updateTask(TaskDTO taskDTO, String employeeId,String projectId) {
+        TaskId compositeTaskId = new TaskId(taskDTO.getId(), projectId);
 
         Task task = taskRepository.findById(compositeTaskId)
                 .orElseThrow(() -> new TaskNotFoundException("Task not found"));
@@ -88,20 +99,23 @@ public class TaskServiceImpl {
 
 
     public String createStatus(String taskId, String projectId, TaskUpdateDTO taskUpdateDTO) {
-
         TaskId taskKey = new TaskId(taskId, projectId);
-
 
         Task task = taskRepository.findById(taskKey)
                 .orElseThrow(() -> new TaskNotFoundException("Task not found"));
 
 
+       Long lastUpdateNumber = taskUpdateRepository
+                .findMaxUpdateNumber(projectId, taskId)
+                .orElse(0L);
+
+        Long newUpdateNumber = lastUpdateNumber + 1;
+
+        TaskUpdateId updateId = new TaskUpdateId(taskKey, newUpdateNumber);
+
+
         TaskUpdate taskUpdate = modelMapper.map(taskUpdateDTO, TaskUpdate.class);
-
-
-        TaskUpdateId updateId = new TaskUpdateId(taskKey, taskUpdateDTO.getUpdateNumber());
-
-        taskUpdate.setUpdateNumber(updateId);
+        taskUpdate.setId(updateId);
         taskUpdate.setUpdatedDate(LocalDateTime.now());
         taskUpdate.setTask(task);
 
@@ -118,29 +132,36 @@ public class TaskServiceImpl {
         Task task = taskRepository.findById(taskKey)
                 .orElseThrow(() -> new TaskNotFoundException("Task not found"));
 
-        return task.getUpdates().stream()
-                .map(update -> modelMapper.map(update, TaskUpdateDTO.class))
+        return task.getUpdateHistory().stream()
+                .map(update -> {
+                    TaskUpdateDTO dto = new TaskUpdateDTO();
+                    dto.setId(update.getId().getUpdateNumber()); // Manually set updateNumber
+                    dto.setChanges(update.getChanges());
+                    dto.setNote(update.getNote());
+                    dto.setRelatedLinks(update.getRelatedLinks());
+                    dto.setRelatedFileLinks(update.getRelatedFileLinks());
+                    dto.setUpdatedDate(update.getUpdatedDate());
+                    dto.setReviewedBy(update.getReviewedBy());
+                    return dto;
+                })
                 .toList();
     }
 
 
-    public String updateStatus(String taskId, String projectId, Long updateNumber, TaskUpdateDTO taskUpdateDTO) {
-
+    public String updateStatus(String taskId, String projectId, TaskUpdateDTO taskUpdateDTO) {
         TaskId taskKey = new TaskId(taskId, projectId);
-
-        TaskUpdateId compositeUpdateId = new TaskUpdateId(taskKey, updateNumber);
+        TaskUpdateId compositeUpdateId = new TaskUpdateId(taskKey, taskUpdateDTO.getId());
 
         TaskUpdate taskUpdate = taskUpdateRepository.findById(compositeUpdateId)
                 .orElseThrow(() -> new TaskNotFoundException("Update not found"));
 
 
-
-
-       taskUpdate.setUpdatedDate(taskUpdateDTO.getUpdatedDate());
-       taskUpdate.setNote(taskUpdateDTO.getNote());
-       taskUpdate.setChanges(taskUpdateDTO.getChanges());
-       taskUpdate.setRelatedFiles(taskUpdateDTO.getRelatedFiles());
-       taskUpdate.setRelatedGitLinks(taskUpdateDTO.getRelatedGitLinks());
+        taskUpdate.setUpdatedDate(taskUpdateDTO.getUpdatedDate());
+        taskUpdate.setNote(taskUpdateDTO.getNote());
+        taskUpdate.setChanges(taskUpdateDTO.getChanges());
+        taskUpdate.setRelatedFileLinks(taskUpdateDTO.getRelatedFileLinks());
+        taskUpdate.setRelatedLinks(taskUpdateDTO.getRelatedLinks());
+        taskUpdate.setReviewedBy(taskUpdateDTO.getReviewedBy());
 
         if (taskUpdate.getTask() == null) {
             Task task = taskRepository.findById(taskKey)
@@ -149,11 +170,8 @@ public class TaskServiceImpl {
         }
 
         taskUpdateRepository.save(taskUpdate);
-
         return "Updated Successfully";
-
-
-
     }
+
 
 }

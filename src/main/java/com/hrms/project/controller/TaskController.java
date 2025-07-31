@@ -40,12 +40,11 @@ public class TaskController {
 
     }
 
-    @PutMapping("/{employeeId}/{projectId}/{taskId}/task")
+    @PutMapping("/{employeeId}/{projectId}/task")
     public ResponseEntity<String> updateTask(@RequestBody TaskDTO taskDTO,
                                              @PathVariable String employeeId,
-                                             @PathVariable String projectId,
-                                             @PathVariable String taskId){
-        return new ResponseEntity<>(taskService.updateTask(taskDTO,employeeId,projectId,taskId),HttpStatus.CREATED);
+                                             @PathVariable String projectId){
+        return new ResponseEntity<>(taskService.updateTask(taskDTO,employeeId,projectId),HttpStatus.CREATED);
     }
 
     @PostMapping("/history/{projectId}/{taskId}")
@@ -62,13 +61,12 @@ public class TaskController {
         return new ResponseEntity<>(taskService.getTaskStatus(taskId, projectId), HttpStatus.OK);
     }
 
-    @PutMapping("/status/{projectId}/{taskId}/{updateNumber}")
+    @PutMapping("/status/{projectId}/{taskId}")
     public ResponseEntity<String> updateTaskHistory(@PathVariable String taskId,
                                                         @PathVariable String projectId,
-                                                        @PathVariable Long updateNumber,
                                                         @RequestBody TaskUpdateDTO taskUpdateDTO) {
 
-        return new ResponseEntity<>(taskService.updateStatus(taskId, projectId, updateNumber, taskUpdateDTO),
+        return new ResponseEntity<>(taskService.updateStatus(taskId, projectId, taskUpdateDTO),
                 HttpStatus.OK);
     }
 

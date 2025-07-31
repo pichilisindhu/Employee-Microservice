@@ -21,7 +21,7 @@ import java.util.List;
 public class Task {
 
     @EmbeddedId
-    private TaskId taskId;
+    private TaskId id;
 
     private String title;
     private String description;
@@ -35,8 +35,8 @@ public class Task {
     private Integer rating;
     private String remark;
     private String completionNote;
-    private String gitLink;
-    private String attachedFileLink;
+    private List<String> relatedLinks;
+    private List<String> attachedFileLinks;
 
     @ManyToOne
     @JoinColumn(name="employee_id")
@@ -50,7 +50,7 @@ public class Task {
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("task-update")
-    private List<TaskUpdate> updates;
+    private List<TaskUpdate> updateHistory;
 
 
 

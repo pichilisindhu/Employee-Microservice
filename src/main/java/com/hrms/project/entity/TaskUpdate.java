@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -15,13 +16,13 @@ import java.time.LocalDateTime;
 public class TaskUpdate {
 
     @EmbeddedId
-    private TaskUpdateId updateNumber;
-
+    private TaskUpdateId id;
     private LocalDateTime updatedDate;
     private String changes;
     private String note;
-    private String relatedGitLinks;
-    private String relatedFiles;
+    private List<String> relatedLinks;
+    private List<String> relatedFileLinks;
+    private String reviewedBy;
 
     @ManyToOne
     @MapsId("taskId")

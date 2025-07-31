@@ -15,8 +15,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WorkExperienceDetails {
-    @Id
 
+    @Id
     private String id;
     private String companyName;
     private String jobTitle;
@@ -26,7 +26,7 @@ public class WorkExperienceDetails {
     private String startYear;
     private String endMonth;
     private String endYear;
-    private String uploadFiles;
+//    private String uploadFiles;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id")

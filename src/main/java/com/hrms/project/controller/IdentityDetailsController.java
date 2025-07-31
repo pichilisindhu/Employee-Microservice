@@ -205,18 +205,21 @@ public ResponseEntity<PanDTO> savePan(
 
 //    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'EMPLOYEE')")
     @PostMapping("/{employeeId}/previousExperience")
-    public ResponseEntity<WorkExperienceDetails>createExperience(@PathVariable String employeeId,@RequestPart(value = "uploadImage",required = false) MultipartFile uploadImage,
-                                                                 @RequestPart WorkExperienceDetails workExperienceDetails) throws IOException {
-        WorkExperienceDetails experienceDetails=  workExperienceServiceImpl.createExperenceByEmployeId(employeeId,uploadImage,workExperienceDetails);
+    public ResponseEntity<WorkExperienceDetails>createExperience(@PathVariable String employeeId,
+
+                                                                 //@RequestPart(value = "uploadImage",required = false) MultipartFile uploadImage,
+                                                                 @RequestPart WorkExperienceDetails workExperienceDetails) {
+        WorkExperienceDetails experienceDetails=  workExperienceServiceImpl.createExperenceByEmployeId(employeeId,workExperienceDetails);
         return new ResponseEntity<>(experienceDetails,HttpStatus.CREATED);
     }
 
 //    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'EMPLOYEE')")
     @PutMapping("/{employeeId}/previousExperience/{id}")
-    public ResponseEntity<WorkExperienceDetails>updateExperience(@PathVariable String employeeId,@RequestPart(value = "uploadImage",required = false)MultipartFile uploadImage,
-                                                                 @RequestPart WorkExperienceDetails workExperienceDetails,@PathVariable String id) throws IOException
+    public ResponseEntity<WorkExperienceDetails>updateExperience(@PathVariable String employeeId,
+                                                                 //@RequestPart(value = "uploadImage",required = false)MultipartFile uploadImage,
+                                                                 @RequestPart WorkExperienceDetails workExperienceDetails,@PathVariable String id)
     {
-        WorkExperienceDetails workExperienceDetails1=workExperienceServiceImpl.updateExperience(employeeId,uploadImage,workExperienceDetails,id);
+        WorkExperienceDetails workExperienceDetails1=workExperienceServiceImpl.updateExperience(employeeId,workExperienceDetails,id);
         return new ResponseEntity<>(workExperienceDetails1,HttpStatus.CREATED);
     }
 

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class WorkExperienceDTO {
 
-    private String id;
+
     private String companyName;
     private String jobTitle;
     private String location;

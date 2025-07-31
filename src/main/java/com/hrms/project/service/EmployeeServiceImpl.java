@@ -190,9 +190,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeePrimaryDetailsDTO updateEmployeeDetails(String employeeId, EmployeePrimaryDetailsDTO employeePrimaryDetailsDTO) {
+        System.out.println(employeePrimaryDetailsDTO);
         Employee employeeDetails=employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + employeeId));
-        modelMapper.map(employeeDetails,employeePrimaryDetailsDTO);
+        modelMapper.map(employeePrimaryDetailsDTO,employeeDetails);
         employeeRepository.save(employeeDetails);
         return modelMapper.map(employeeDetails, EmployeePrimaryDetailsDTO.class);
 

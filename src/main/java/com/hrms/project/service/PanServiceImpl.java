@@ -74,7 +74,6 @@ public class PanServiceImpl {
         if(details!=null)
         {
             PanDTO panDTO=modelMapper.map(details,PanDTO.class);
-            panDTO.setEmployeeId(employeeId);
             return panDTO;
         }
         else

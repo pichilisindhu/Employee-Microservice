@@ -8,17 +8,23 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskUpdateDTO {
-    private Long updateNumber;
+
+
+    private Long id;
     private String changes;
     private String note;
-    private String relatedGitLinks;
-    private String relatedFiles;
+    private List<String> relatedLinks;
+    private List<String> relatedFileLinks;
     private LocalDateTime updatedDate;
+
+    private String reviewedBy;
+
 }
 

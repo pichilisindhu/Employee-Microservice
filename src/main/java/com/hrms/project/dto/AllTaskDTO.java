@@ -14,8 +14,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class AllTaskDTO {
 
+    private String id;
     private String status;
     private String title;
     private String priority;
     private LocalDate startDate;
+    private LocalDate dueDate;
+
 }

@@ -37,7 +37,6 @@ public class AadhaarServiceImpl {
     public AadhaarCardDetails createAadhaar(String employeeId, MultipartFile aadhaarImage, AadhaarCardDetails aadhaarCardDetails) throws IOException {
 
 
-
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("employee not found with id: " + employeeId));
 
@@ -92,6 +91,8 @@ public class AadhaarServiceImpl {
 
 
     public AadhaarCardDetails updateAadhaar(String employeeId,MultipartFile aadhaarImage, AadhaarCardDetails aadhaarCardDetails) throws IOException {
+       System.out.println(aadhaarCardDetails);
+
         Employee employee=employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee Not Found with the id: " + employeeId));
 
@@ -110,9 +111,11 @@ public class AadhaarServiceImpl {
         }
 
         existing.setDateOfBirth(aadhaarCardDetails.getDateOfBirth());
+        existing.setEnrollmentNumber(aadhaarCardDetails.getEnrollmentNumber());
         existing.setAadhaarName(aadhaarCardDetails.getAadhaarName());
         existing.setGender(aadhaarCardDetails.getGender());
         existing.setAddress(aadhaarCardDetails.getAddress());
+
 
         return aadhaarDetailsRepository.save(existing);
 
