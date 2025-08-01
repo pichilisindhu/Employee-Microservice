@@ -142,6 +142,7 @@ public class TaskServiceImpl {
                     dto.setRelatedFileLinks(update.getRelatedFileLinks());
                     dto.setUpdatedDate(update.getUpdatedDate());
                     dto.setReviewedBy(update.getReviewedBy());
+                    dto.setRemark(update.getRemark());
                     return dto;
                 })
                 .toList();
@@ -162,6 +163,7 @@ public class TaskServiceImpl {
         taskUpdate.setRelatedFileLinks(taskUpdateDTO.getRelatedFileLinks());
         taskUpdate.setRelatedLinks(taskUpdateDTO.getRelatedLinks());
         taskUpdate.setReviewedBy(taskUpdateDTO.getReviewedBy());
+        taskUpdate.setRemark(taskUpdateDTO.getRemark());
 
         if (taskUpdate.getTask() == null) {
             Task task = taskRepository.findById(taskKey)

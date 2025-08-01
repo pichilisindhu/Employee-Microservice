@@ -21,6 +21,6 @@ public class AchievementsDTO {
     private String expirationYear;
 
     private String licenseNumber;
-    private String achievementFile;
+
 
 }

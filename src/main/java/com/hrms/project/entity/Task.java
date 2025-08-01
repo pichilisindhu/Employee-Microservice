@@ -51,11 +51,5 @@ public class Task {
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("task-update")
     private List<TaskUpdate> updateHistory;
-
-
-
-
-
-
-
+    
 }

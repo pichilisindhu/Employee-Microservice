@@ -2,6 +2,7 @@ package com.hrms.project.controller;
 
 import com.hrms.project.dto.AchievementsDTO;
 import com.hrms.project.dto.SkillsDTO;
+import com.hrms.project.entity.Achievements;
 import com.hrms.project.service.AchievementsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-
+import java.util.Map;
 
 
 @RestController
@@ -24,8 +25,8 @@ public class AchievementsController {
     @PostMapping("/achievements/{employeeId}")
     public ResponseEntity<AchievementsDTO> addAchievements(@PathVariable String employeeId,
                                                             @RequestPart(value="image",required = false) MultipartFile image,
-                                                        @RequestPart(value="details") AchievementsDTO achievementsDTO) throws IOException {
-        return new ResponseEntity<AchievementsDTO>(achievementsServiceImpl.addAchievements(employeeId,image,achievementsDTO), HttpStatus.CREATED);
+                                                        @RequestPart(value="details") Achievements achievementsDTO) throws IOException {
+        return new ResponseEntity<>(achievementsServiceImpl.addAchievements(employeeId,image,achievementsDTO), HttpStatus.CREATED);
 
     }
 
@@ -36,17 +37,21 @@ public class AchievementsController {
         return new ResponseEntity<>(certifications,HttpStatus.OK);
     }
 
+    @PutMapping("/{employeeId}/{certificateId}/achievements")
+    public ResponseEntity<AchievementsDTO> updateAchievements(
+            @PathVariable String employeeId,
+            @PathVariable String certificateId,
+            @RequestPart("image") MultipartFile image,
+            @RequestPart("details") Achievements achievement) throws IOException {
+
+       return new ResponseEntity<>( achievementsServiceImpl.updateAchievements(employeeId, certificateId, image, achievement),HttpStatus.CREATED);
+
+    }
+
+
     @GetMapping("/{employeeId}/{achievementId}/achievement")
     public ResponseEntity<AchievementsDTO> getAchievement(@PathVariable String employeeId,@PathVariable String achievementId) {
         return new ResponseEntity<>(achievementsServiceImpl.getAchievement(employeeId,achievementId),HttpStatus.OK);
-    }
-
-    @PutMapping("/{employeeId}/{certificateId}/achievements")
-    public ResponseEntity<AchievementsDTO> updateAchievements(@PathVariable String employeeId,
-                                                              @PathVariable  Long certificateId,
-                                                              @RequestPart(value="image") MultipartFile image,
-                                                              @RequestPart(value="details") AchievementsDTO achievementsDTO) throws IOException {
-        return new ResponseEntity<>(achievementsServiceImpl.updateAchievements(employeeId,certificateId,image,achievementsDTO),HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{employeeId}/{certificateId}/achievements")

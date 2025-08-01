@@ -39,23 +39,20 @@ public class AchievementsServiceImpl {
     @Autowired
     private ModelMapper modelMapper;
 
-    public AchievementsDTO addAchievements(String employeeId,MultipartFile image, AchievementsDTO achievementsDTO) throws IOException {
+    public  AchievementsDTO addAchievements(String employeeId,MultipartFile image, Achievements achievements) throws IOException {
 
         Employee employee=employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + employeeId));
 
-        Achievements newAchievements = new Achievements();
-
-        modelMapper.map(achievementsDTO,newAchievements);
-
-        newAchievements.setEmployee(employee);
-
 
         if (image != null && !image.isEmpty()) {
             String img = fileService.uploadImage(path, image);
-            newAchievements.setAchievementFile(img);
+            achievements.setAchievementFile(img);
+
         }
-        return modelMapper.map(achievementsRepository.save(newAchievements),AchievementsDTO.class);
+        achievements.setEmployee(employee);
+
+        return modelMapper.map(achievementsRepository.save(achievements),AchievementsDTO.class);
 
     }
 
@@ -92,27 +89,42 @@ public class AchievementsServiceImpl {
     }
 
 
-    public AchievementsDTO updateAchievements(String employeeId, Long certificateId,
-                                              MultipartFile image, AchievementsDTO achievementsDTO) throws IOException {
+    public AchievementsDTO updateAchievements(String employeeId, String certificateId,
+                                     MultipartFile image, Achievements achievement) throws IOException {
 
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + employeeId));
+
+        if (employee.getAchievements() == null || employee.getAchievements().isEmpty()) {
+            throw new RuntimeException("No achievements found for employee " + employeeId);
+        }
 
         Achievements achievementToUpdate = employee.getAchievements().stream()
                 .filter(achieve -> achieve.getId().equals(certificateId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Achievement with certificate ID " + certificateId + " not found."));
 
-        modelMapper.map(achievementsDTO, achievementToUpdate);
-
         if (image != null && !image.isEmpty()) {
             String img = fileService.uploadImage(path, image);
             achievementToUpdate.setAchievementFile(img);
         }
-       achievementsRepository.save(achievementToUpdate);
 
-        return modelMapper.map(achievementToUpdate, AchievementsDTO.class);
+        achievementToUpdate.setCertificationName(achievement.getCertificationName());
+        achievementToUpdate.setIssuingAuthorityName(achievement.getIssuingAuthorityName());
+        achievementToUpdate.setCertificationURL(achievement.getCertificationURL());
+        achievementToUpdate.setIssueMonth(achievement.getIssueMonth());
+        achievementToUpdate.setIssueYear(achievement.getIssueYear());
+        achievementToUpdate.setExpirationMonth(achievement.getExpirationMonth());
+        achievementToUpdate.setExpirationYear(achievement.getExpirationYear());
+        achievementToUpdate.setLicenseNumber(achievement.getLicenseNumber());
+
+        achievementsRepository.save(achievementToUpdate);
+
+        return modelMapper.map(achievementToUpdate,AchievementsDTO.class);
     }
+
+
+
 
     public AchievementsDTO deleteAchievements(String employeeId, String certificateId) {
 

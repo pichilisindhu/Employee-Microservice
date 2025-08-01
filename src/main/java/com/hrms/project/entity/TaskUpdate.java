@@ -24,6 +24,8 @@ public class TaskUpdate {
     private List<String> relatedFileLinks;
     private String reviewedBy;
 
+    private String remark;
+
     @ManyToOne
     @MapsId("taskId")
     @JoinColumns({

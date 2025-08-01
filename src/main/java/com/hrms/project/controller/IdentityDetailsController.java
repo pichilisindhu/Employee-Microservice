@@ -206,9 +206,7 @@ public ResponseEntity<PanDTO> savePan(
 //    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'EMPLOYEE')")
     @PostMapping("/{employeeId}/previousExperience")
     public ResponseEntity<WorkExperienceDetails>createExperience(@PathVariable String employeeId,
-
-                                                                 //@RequestPart(value = "uploadImage",required = false) MultipartFile uploadImage,
-                                                                 @RequestPart WorkExperienceDetails workExperienceDetails) {
+                                                                 @RequestBody WorkExperienceDetails workExperienceDetails) {
         WorkExperienceDetails experienceDetails=  workExperienceServiceImpl.createExperenceByEmployeId(employeeId,workExperienceDetails);
         return new ResponseEntity<>(experienceDetails,HttpStatus.CREATED);
     }
@@ -216,8 +214,7 @@ public ResponseEntity<PanDTO> savePan(
 //    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'EMPLOYEE')")
     @PutMapping("/{employeeId}/previousExperience/{id}")
     public ResponseEntity<WorkExperienceDetails>updateExperience(@PathVariable String employeeId,
-                                                                 //@RequestPart(value = "uploadImage",required = false)MultipartFile uploadImage,
-                                                                 @RequestPart WorkExperienceDetails workExperienceDetails,@PathVariable String id)
+                                                                 @RequestBody WorkExperienceDetails workExperienceDetails,@PathVariable String id)
     {
         WorkExperienceDetails workExperienceDetails1=workExperienceServiceImpl.updateExperience(employeeId,workExperienceDetails,id);
         return new ResponseEntity<>(workExperienceDetails1,HttpStatus.CREATED);
@@ -258,8 +255,8 @@ public ResponseEntity<PanDTO> savePan(
 //    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'EMPLOYEE')")
     @PutMapping("/{employeeId}/degreeDetails")
     public ResponseEntity<DegreeCertificates>updateDegree(@PathVariable String employeeId,
-                                                          @RequestPart("addFiles")MultipartFile addFiles,
-                                                          @RequestPart DegreeCertificates degreeCertificates) throws IOException {
+                                                          @RequestPart(value = "addFiles",required = false)MultipartFile addFiles,
+                                                          @RequestPart(value="degree") DegreeCertificates degreeCertificates) throws IOException {
         DegreeCertificates degree =degreeServiceImpl.updateDegree(employeeId,addFiles,degreeCertificates);
         return new ResponseEntity<>(degree,HttpStatus.OK);
     }

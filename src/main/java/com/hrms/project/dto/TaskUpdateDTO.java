@@ -1,12 +1,10 @@
 package com.hrms.project.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,8 +21,8 @@ public class TaskUpdateDTO {
     private List<String> relatedLinks;
     private List<String> relatedFileLinks;
     private LocalDateTime updatedDate;
-
     private String reviewedBy;
+    private String remark;
 
 }
 

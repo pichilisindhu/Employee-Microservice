@@ -15,10 +15,10 @@ public class DegreeDTO {
     private String id;
     private String degree;
     private String branchOrSpecialization;
-    private LocalDate startMonth;
-    private LocalDate endMonth;
-    private LocalDate startYear;
-    private LocalDate endYear;
+    private String startMonth;
+    private String endMonth;
+    private String startYear;
+    private String endYear;
     private String cgpaOrPercentage;
     private String universityOrCollege;
     private String addFiles;
