@@ -14,8 +14,6 @@ import java.util.Optional;
 
 @Repository
 public interface TaskUpdateRepository extends JpaRepository<TaskUpdate, TaskUpdateId> {
-    @Query("SELECT MAX(t.id.updateNumber) FROM TaskUpdate t WHERE t.id.taskId.taskId = :taskId AND t.id.taskId.projectId = :projectId")
-    Optional<Long> findMaxUpdateNumber(@Param("projectId") String projectId, @Param("taskId") String taskId);
 
 }
 

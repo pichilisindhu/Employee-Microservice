@@ -51,7 +51,7 @@ public class EmployeeController {
 //    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'MANAGER')")
     @PutMapping("/employee/{employeeId}/contact")
     public ResponseEntity<ContactDetailsDTO> updateContactDetails(@PathVariable String employeeId,
-                                                                  @RequestBody ContactDetailsDTO contactDetailsDTO) {
+                                                                  @Valid @RequestBody ContactDetailsDTO contactDetailsDTO) {
         ContactDetailsDTO updatedContactDetails = employeeService.updateContactDetails(employeeId, contactDetailsDTO);
         return new ResponseEntity<>(updatedContactDetails, HttpStatus.CREATED);
     }
@@ -75,7 +75,7 @@ public class EmployeeController {
 //    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'MANAGER')")
     @PutMapping("/employee/{employeeId}/address")
     public ResponseEntity<AddressDTO> updateAddress(@PathVariable String employeeId,
-                                                    @RequestBody AddressDTO addressDTO) {
+                                                    @Valid @RequestBody AddressDTO addressDTO) {
         AddressDTO updatedAddressDTO = employeeService.updateEmployeeAddress(employeeId, addressDTO);
         return new ResponseEntity<>(updatedAddressDTO, HttpStatus.CREATED);
     }
@@ -93,7 +93,7 @@ public class EmployeeController {
 //    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'MANAGER')")
     @PutMapping("/employee/{employeeId}/primary/details")
     public ResponseEntity<EmployeePrimaryDetailsDTO> updateEmployeePrimaryDetails(@PathVariable String employeeId,
-                                                                                  @RequestBody EmployeePrimaryDetailsDTO employeePrimaryDetailsDTO) {
+                                                                                 @Valid @RequestBody EmployeePrimaryDetailsDTO employeePrimaryDetailsDTO) {
         EmployeePrimaryDetailsDTO updatedPrimaryDetails = employeeService.updateEmployeeDetails(employeeId, employeePrimaryDetailsDTO);
         return new ResponseEntity<>(updatedPrimaryDetails, HttpStatus.CREATED);
     }
@@ -110,7 +110,7 @@ public class EmployeeController {
 //    @PreAuthorize("hasAnyRole('ADMIN', 'HR', 'MANAGER')")
     @PutMapping("/employee/{employeeId}/job/details")
     public ResponseEntity<JobDetailsDTO> updateJobDetails(@PathVariable String employeeId,
-                                                          @RequestBody JobDetailsDTO jobDetailsDTO) {
+                                                         @Valid  @RequestBody JobDetailsDTO jobDetailsDTO) {
         JobDetailsDTO updatedJobDetails = employeeService.updateJobDetails(employeeId, jobDetailsDTO);
         return new ResponseEntity<>(updatedJobDetails, HttpStatus.OK);
     }

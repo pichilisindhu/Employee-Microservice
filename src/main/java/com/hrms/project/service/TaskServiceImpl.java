@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 public class TaskServiceImpl {
 
@@ -68,6 +70,7 @@ public class TaskServiceImpl {
                     dto.setPriority(task.getPriority());
                     dto.setStartDate(task.getCreatedDate());
                     dto.setDueDate(task.getDueDate());
+                    dto.setProjectId(task.getProject().getProjectId());
                     return dto;
                 })
                 .toList();
@@ -95,34 +98,35 @@ public class TaskServiceImpl {
         return "Assignment Updated Successfully";
     }
 
-
-
-
     public String createStatus(String taskId, String projectId, TaskUpdateDTO taskUpdateDTO) {
-        TaskId taskKey = new TaskId(taskId, projectId);
 
+        TaskId taskKey = new TaskId(taskId, projectId);
         Task task = taskRepository.findById(taskKey)
                 .orElseThrow(() -> new TaskNotFoundException("Task not found"));
 
+        if (taskUpdateDTO.getId() == null) {
+            throw new IllegalArgumentException("Task update ID must be provided");
+        }
 
-       Long lastUpdateNumber = taskUpdateRepository
-                .findMaxUpdateNumber(projectId, taskId)
-                .orElse(0L);
+        TaskUpdateId compositeUpdateId = new TaskUpdateId(taskKey, taskUpdateDTO.getId());
 
-        Long newUpdateNumber = lastUpdateNumber + 1;
-
-        TaskUpdateId updateId = new TaskUpdateId(taskKey, newUpdateNumber);
-
-
-        TaskUpdate taskUpdate = modelMapper.map(taskUpdateDTO, TaskUpdate.class);
-        taskUpdate.setId(updateId);
-        taskUpdate.setUpdatedDate(LocalDateTime.now());
+        TaskUpdate taskUpdate = new TaskUpdate();
         taskUpdate.setTask(task);
+        taskUpdate.setId(compositeUpdateId);
+
+        taskUpdate.setUpdatedDate(LocalDateTime.now());
+        taskUpdate.setChanges(taskUpdateDTO.getChanges());
+        taskUpdate.setNote(taskUpdateDTO.getNote());
+        taskUpdate.setRelatedLinks(taskUpdateDTO.getRelatedLinks());
+        taskUpdate.setRelatedFileLinks(taskUpdateDTO.getRelatedFileLinks());
+        taskUpdate.setReviewedBy(taskUpdateDTO.getReviewedBy());
+        taskUpdate.setRemark(taskUpdateDTO.getRemark());
 
         taskUpdateRepository.save(taskUpdate);
-
-        return "Task Status Created Successfully";
+        return "Task update saved successfully";
     }
+
+
 
 
 
@@ -174,6 +178,56 @@ public class TaskServiceImpl {
         taskUpdateRepository.save(taskUpdate);
         return "Updated Successfully";
     }
+
+
+    public TaskDTO getTask(String projectId, String taskId) {
+
+        TaskId taskKey = new TaskId(taskId, projectId);
+
+        Task task = taskRepository.findById(taskKey)
+                .orElseThrow(() -> new TaskNotFoundException("Task not found"));
+
+
+        TaskDTO dto = new TaskDTO();
+        dto.setId(task.getId().getTaskId());
+        dto.setTitle(task.getTitle());
+        dto.setDescription(task.getDescription());
+        dto.setCreatedBy(task.getCreatedBy());
+        dto.setAssignedTo(task.getAssignedTo());
+        dto.setStatus(task.getStatus());
+        dto.setPriority(task.getPriority());
+        dto.setCreatedDate(task.getCreatedDate());
+        dto.setCompletedDate(task.getCompletedDate());
+        dto.setDueDate(task.getDueDate());
+        dto.setRating(task.getRating());
+        dto.setRemark(task.getRemark());
+        dto.setCompletionNote(task.getCompletionNote());
+        dto.setRelatedLinks(task.getRelatedLinks());
+        dto.setAttachedFileLinks(task.getAttachedFileLinks());
+        return dto;
+    }
+    public List<TaskUpdateDTO> getUpdateTasks(String projectId, String taskId) {
+        return taskUpdateRepository.findAll()
+                .stream()
+                .filter(taskUpdate ->
+                        taskUpdate.getTask().getId().getTaskId().equals(taskId) &&
+                                taskUpdate.getTask().getId().getProjectId().equals(projectId)
+                )
+                .map(update -> {
+                    TaskUpdateDTO dto = new TaskUpdateDTO();
+                    dto.setId(update.getId().getUpdateNumber());
+                    dto.setChanges(update.getChanges());
+                    dto.setNote(update.getNote());
+                    dto.setRelatedLinks(update.getRelatedLinks());
+                    dto.setRelatedFileLinks(update.getRelatedFileLinks());
+                    dto.setUpdatedDate(update.getUpdatedDate());
+                    dto.setReviewedBy(update.getReviewedBy());
+                    dto.setRemark(update.getRemark());
+                    return dto;
+                })
+                .toList();
+    }
+
 
 
 }

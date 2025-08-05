@@ -39,16 +39,16 @@ public class AchievementsServiceImpl {
     @Autowired
     private ModelMapper modelMapper;
 
-    public  AchievementsDTO addAchievements(String employeeId,MultipartFile image, Achievements achievements) throws IOException {
+    public  AchievementsDTO addAchievements(String employeeId,MultipartFile image, AchievementsDTO achievementsDTO) throws IOException {
 
         Employee employee=employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + employeeId));
+       Achievements achievements= modelMapper.map(achievementsDTO,Achievements.class);
 
 
         if (image != null && !image.isEmpty()) {
             String img = fileService.uploadImage(path, image);
             achievements.setAchievementFile(img);
-
         }
         achievements.setEmployee(employee);
 
@@ -60,37 +60,22 @@ public class AchievementsServiceImpl {
 
         Employee employee=employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + employeeId));
-
         List<Achievements> achievements=employee.getAchievements();
-
      return achievements.stream().map(achieve->
-        {
-            return modelMapper.map(achieve,AchievementsDTO.class);
-        }).toList();
-
-
-
-
-
+             modelMapper.map(achieve,AchievementsDTO.class)).toList();
     }
 
-    public AchievementsDTO getAchievement(String employeeId,String achievementId) {
-
-        Employee employee=employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + employeeId));
+    public AchievementsDTO getAchievement(String achievementId) {
 
         Achievements achievements=achievementsRepository.findById(achievementId)
                 .orElseThrow(()->new APIException("Achievement not found with id " + achievementId));
-
         return modelMapper.map(achievements,AchievementsDTO.class);
-
-
 
     }
 
 
     public AchievementsDTO updateAchievements(String employeeId, String certificateId,
-                                     MultipartFile image, Achievements achievement) throws IOException {
+                                     MultipartFile image, AchievementsDTO achievementDTO) throws IOException {
 
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id " + employeeId));
@@ -109,14 +94,14 @@ public class AchievementsServiceImpl {
             achievementToUpdate.setAchievementFile(img);
         }
 
-        achievementToUpdate.setCertificationName(achievement.getCertificationName());
-        achievementToUpdate.setIssuingAuthorityName(achievement.getIssuingAuthorityName());
-        achievementToUpdate.setCertificationURL(achievement.getCertificationURL());
-        achievementToUpdate.setIssueMonth(achievement.getIssueMonth());
-        achievementToUpdate.setIssueYear(achievement.getIssueYear());
-        achievementToUpdate.setExpirationMonth(achievement.getExpirationMonth());
-        achievementToUpdate.setExpirationYear(achievement.getExpirationYear());
-        achievementToUpdate.setLicenseNumber(achievement.getLicenseNumber());
+        achievementToUpdate.setCertificationName(achievementDTO.getCertificationName());
+        achievementToUpdate.setIssuingAuthorityName(achievementDTO.getIssuingAuthorityName());
+        achievementToUpdate.setCertificationURL(achievementDTO.getCertificationURL());
+        achievementToUpdate.setIssueMonth(achievementDTO.getIssueMonth());
+        achievementToUpdate.setIssueYear(achievementDTO.getIssueYear());
+        achievementToUpdate.setExpirationMonth(achievementDTO.getExpirationMonth());
+        achievementToUpdate.setExpirationYear(achievementDTO.getExpirationYear());
+        achievementToUpdate.setLicenseNumber(achievementDTO.getLicenseNumber());
 
         achievementsRepository.save(achievementToUpdate);
 

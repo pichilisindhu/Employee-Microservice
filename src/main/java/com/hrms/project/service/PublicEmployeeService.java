@@ -1,5 +1,7 @@
 package com.hrms.project.service;
 
+import com.hrms.project.dto.AchievementsDTO;
+import com.hrms.project.entity.Achievements;
 import com.hrms.project.entity.Employee;
 import com.hrms.project.entity.Project;
 import com.hrms.project.handlers.EmployeeNotFoundException;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PublicEmployeeService {
@@ -32,6 +35,7 @@ public class PublicEmployeeService {
                 {
                     PublicEmployeeDetails publicEmployeeDetails = new PublicEmployeeDetails();
 
+                    publicEmployeeDetails.setEmployeeId(emp.getEmployeeId());
                     publicEmployeeDetails.setName(emp.getDisplayName());
                     publicEmployeeDetails.setWorkEmail(emp.getWorkEmail());
                     publicEmployeeDetails.setLocation(emp.getLocation());
@@ -63,6 +67,21 @@ public class PublicEmployeeService {
         publicEmployeeDetails.setContact(employee.getWorkNumber());
 
         publicEmployeeDetails.setSkills(employee.getSkills());
+        List<Achievements> achievements=employee.getAchievements();
+
+        publicEmployeeDetails.setAchievements(
+                achievements.stream().map(
+                        achievement ->{
+                            AchievementsDTO dto=new AchievementsDTO();
+                            dto.setCertificationName(achievement.getCertificationName());
+                            dto.setIssuingAuthorityName(achievement.getIssuingAuthorityName());
+                            return dto;
+                        }
+
+                ).toList()
+        );
+
+
 
         List<Project> projects=employee.getProjects();
 
@@ -86,12 +105,10 @@ public class PublicEmployeeService {
                 () -> new EmployeeNotFoundException("Employee with id: " + employeeId + " not found"));
 
         PublicEmployeeDetails publicEmployeeDetails = new PublicEmployeeDetails();
-
         publicEmployeeDetails.setEmployeeId(employee.getEmployeeId());
         publicEmployeeDetails.setName(employee.getDisplayName());
         publicEmployeeDetails.setWorkEmail(employee.getWorkEmail());
         publicEmployeeDetails.setLocation(employee.getLocation());
-
         publicEmployeeDetails.setEmployeeImage(employee.getEmployeeImage());
         publicEmployeeDetails.setJobTitlePrimary(employee.getJobTitlePrimary());
         publicEmployeeDetails.setDepartment(employee.getDepartment().getDepartmentName());

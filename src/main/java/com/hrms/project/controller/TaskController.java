@@ -31,14 +31,20 @@ public class TaskController {
 
     }
 
-    @GetMapping("/all/tasks/{employeeId}")
-
+        @GetMapping("/all/tasks/{employeeId}")
         public ResponseEntity<List<AllTaskDTO>> getALlTasks(@PathVariable String employeeId)
         {
             return new ResponseEntity<>(taskService.getAllTasks(employeeId),HttpStatus.OK);
 
+        }
+
+    @GetMapping("/task/{projectId}/{taskId}")
+    public ResponseEntity<TaskDTO> getTask(@PathVariable String projectId,@PathVariable String taskId){
+
+        return new ResponseEntity<>(taskService.getTask(projectId,taskId),HttpStatus.OK);
 
     }
+
 
     @PutMapping("/{employeeId}/{projectId}/task")
     public ResponseEntity<String> updateTask(@RequestBody TaskDTO taskDTO,
@@ -46,6 +52,8 @@ public class TaskController {
                                              @PathVariable String projectId){
         return new ResponseEntity<>(taskService.updateTask(taskDTO,employeeId,projectId),HttpStatus.CREATED);
     }
+
+
 
     @PostMapping("/history/{projectId}/{taskId}")
     public ResponseEntity<String> createTaskHistory(@PathVariable String projectId,
@@ -55,12 +63,6 @@ public class TaskController {
         return new ResponseEntity<>(taskService.createStatus(taskId, projectId, taskUpdateDTO), HttpStatus.CREATED);
     }
 
-    @GetMapping("/task/status/{projectId}/{taskId}")
-    public ResponseEntity<List<TaskUpdateDTO>> getTaskStatus(@PathVariable String projectId,
-                                                          @PathVariable String taskId) {
-        return new ResponseEntity<>(taskService.getTaskStatus(taskId, projectId), HttpStatus.OK);
-    }
-
     @PutMapping("/status/{projectId}/{taskId}")
     public ResponseEntity<String> updateTaskHistory(@PathVariable String taskId,
                                                         @PathVariable String projectId,
@@ -68,6 +70,13 @@ public class TaskController {
 
         return new ResponseEntity<>(taskService.updateStatus(taskId, projectId, taskUpdateDTO),
                 HttpStatus.OK);
+    }
+
+    @GetMapping("/{projectId}/{taskId}/updatetasks")
+    public ResponseEntity<List<TaskUpdateDTO>> getUpdateTasks(@PathVariable String projectId,
+                                                        @PathVariable String taskId){
+        return new ResponseEntity<>(taskService.getUpdateTasks(projectId,taskId),HttpStatus.OK);
+
     }
 
 

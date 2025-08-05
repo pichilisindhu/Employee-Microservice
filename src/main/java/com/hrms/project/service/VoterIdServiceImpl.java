@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 public class VoterIdServiceImpl {
@@ -33,32 +34,37 @@ public class VoterIdServiceImpl {
     @Value("${project.image}")
     private String path;
 
-    public VoterDetails createVoter(String employeeId, MultipartFile voterImage, VoterDetails voterDetails) throws IOException {
+    public VoterDetails createVoter(String employeeId, MultipartFile voterImage,
+                                    VoterDTO voterDTO) throws IOException {
 
-        System.out.println(voterDetails);
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + employeeId));
-
         if (voterIdRepository.findByEmployee_EmployeeId(employeeId).isPresent()) {
             throw new APIException("This employee already has a Voter ID assigned");
         }
-
+        Optional<VoterDetails> existingVoterOpt = voterIdRepository.findById(voterDTO.getVoterIdNumber());
         VoterDetails cardDetails;
 
-        if (voterIdRepository.findById(voterDetails.getVoterIdNumber()).isEmpty()) {
+        if (existingVoterOpt.isEmpty()) {
+
+            cardDetails = new VoterDetails();
+            modelMapper.map(voterDTO, cardDetails);
+
             if (voterImage != null && !voterImage.isEmpty()) {
                 String fileName = fileService.uploadImage(path, voterImage);
-                voterDetails.setUploadVoter(fileName);
+                cardDetails.setUploadVoter(fileName);
             }
 
-            voterDetails.setEmployee(employee);
-            cardDetails = voterIdRepository.save(voterDetails);
+            cardDetails.setEmployee(employee);
+            voterIdRepository.save(cardDetails);
 
         } else {
-            VoterDetails existing = voterIdRepository.findById(voterDetails.getVoterIdNumber()).get();
+
+            VoterDetails existing = existingVoterOpt.get();
 
             if (existing.getEmployee() == null) {
                 existing.setEmployee(employee);
+                modelMapper.map(voterDTO, existing);
                 cardDetails = voterIdRepository.save(existing);
             } else {
                 throw new APIException("This Voter ID is already assigned to another employee");
@@ -67,6 +73,7 @@ public class VoterIdServiceImpl {
 
         return cardDetails;
     }
+
 
     public VoterDTO getVoterByEmployee(String employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
@@ -81,7 +88,7 @@ public class VoterIdServiceImpl {
         return modelMapper.map(voterDetails, VoterDTO.class);
     }
 
-    public VoterDetails updateVoter(String employeeId, MultipartFile voterImage, VoterDetails voterDetails) throws IOException {
+    public VoterDetails updateVoter(String employeeId, MultipartFile voterImage, VoterDTO voterDTO) throws IOException {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + employeeId));
 
@@ -91,7 +98,7 @@ public class VoterIdServiceImpl {
             throw new APIException("Voter ID details not found for this employee");
         }
 
-        if (!existing.getVoterIdNumber().equals(voterDetails.getVoterIdNumber())) {
+        if (!existing.getVoterIdNumber().equals(voterDTO.getVoterIdNumber())) {
             throw new APIException("Voter ID number cannot be changed once submitted");
         }
 
@@ -100,15 +107,16 @@ public class VoterIdServiceImpl {
             existing.setUploadVoter(fileName);
         }
 
-        existing.setFullName(voterDetails.getFullName());
-        existing.setRelationName(voterDetails.getRelationName());
-        existing.setGender(voterDetails.getGender());
-        existing.setDateOfBirth(voterDetails.getDateOfBirth());
-        existing.setAddress(voterDetails.getAddress());
-        existing.setIssuedDate(voterDetails.getIssuedDate());
+        existing.setFullName(voterDTO.getFullName());
+        existing.setRelationName(voterDTO.getRelationName());
+        existing.setGender(voterDTO.getGender());
+        existing.setDateOfBirth(voterDTO.getDateOfBirth());
+        existing.setAddress(voterDTO.getAddress());
+        existing.setIssuedDate(voterDTO.getIssuedDate());
 
         return voterIdRepository.save(existing);
     }
+
 
     public VoterDetails deleteByEmployeeId(String employeeId) {
         Employee employee = employeeRepository.findById(employeeId)

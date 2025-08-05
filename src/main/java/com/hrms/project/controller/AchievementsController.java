@@ -25,7 +25,7 @@ public class AchievementsController {
     @PostMapping("/achievements/{employeeId}")
     public ResponseEntity<AchievementsDTO> addAchievements(@PathVariable String employeeId,
                                                             @RequestPart(value="image",required = false) MultipartFile image,
-                                                        @RequestPart(value="details") Achievements achievementsDTO) throws IOException {
+                                                        @RequestPart(value="details") AchievementsDTO achievementsDTO) throws IOException {
         return new ResponseEntity<>(achievementsServiceImpl.addAchievements(employeeId,image,achievementsDTO), HttpStatus.CREATED);
 
     }
@@ -42,16 +42,16 @@ public class AchievementsController {
             @PathVariable String employeeId,
             @PathVariable String certificateId,
             @RequestPart("image") MultipartFile image,
-            @RequestPart("details") Achievements achievement) throws IOException {
+            @RequestPart("details") AchievementsDTO achievementDTO) throws IOException {
 
-       return new ResponseEntity<>( achievementsServiceImpl.updateAchievements(employeeId, certificateId, image, achievement),HttpStatus.CREATED);
+       return new ResponseEntity<>( achievementsServiceImpl.updateAchievements(employeeId, certificateId, image, achievementDTO),HttpStatus.CREATED);
 
     }
 
 
-    @GetMapping("/{employeeId}/{achievementId}/achievement")
-    public ResponseEntity<AchievementsDTO> getAchievement(@PathVariable String employeeId,@PathVariable String achievementId) {
-        return new ResponseEntity<>(achievementsServiceImpl.getAchievement(employeeId,achievementId),HttpStatus.OK);
+    @GetMapping("/{achievementId}/achievement")
+    public ResponseEntity<AchievementsDTO> getAchievement(@PathVariable String achievementId) {
+        return new ResponseEntity<>(achievementsServiceImpl.getAchievement(achievementId),HttpStatus.OK);
     }
 
     @DeleteMapping("/{employeeId}/{certificateId}/achievements")

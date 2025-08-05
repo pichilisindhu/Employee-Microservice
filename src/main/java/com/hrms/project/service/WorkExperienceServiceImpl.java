@@ -27,30 +27,25 @@ public class WorkExperienceServiceImpl {
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    private FileService fileService;
-    @Autowired
     private WorkExperienceRepository workExperienceRepository;
+
     @Autowired
     private ModelMapper modelMapper;
 
     public WorkExperienceDetails createExperenceByEmployeId(String employeeId,
-                                                           // MultipartFile uploadImage,
-                                                            WorkExperienceDetails workExperienceDetails)  {
+                                                            WorkExperienceDTO workExperienceDTO)  {
         Employee employee = employeeRepository.findById(employeeId).orElseThrow(() ->
                 new EmployeeNotFoundException("Employee not found with id " + employeeId));
 
-//        if(uploadImage != null && !uploadImage.isEmpty()){
-//            String fileName = fileService.uploadImage(path,uploadImage);
-//            workExperienceDetails.setUploadFiles(fileName);
-//
-//        }
+        WorkExperienceDetails workExperienceDetails = modelMapper.map(workExperienceDTO, WorkExperienceDetails.class);
+
         workExperienceDetails.setEmployee(employee);
+
         return workExperienceRepository.save(workExperienceDetails);
     }
 
     public WorkExperienceDetails updateExperience(String employeeId,
-                                                  //MultipartFile uploadImage,
-                                                  WorkExperienceDetails updatedData,
+                                                  WorkExperienceDTO updatedData,
                                                   String id) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with ID: " + employeeId));
@@ -61,20 +56,9 @@ public class WorkExperienceServiceImpl {
         if (!existing.getEmployee().getEmployeeId().equals(employeeId)) {
             throw new APIException("This work experience does not belong to employee with ID: " + employeeId);
         }
-
-      //  String oldFile = existing.getUploadFiles();
-
         modelMapper.map(updatedData, existing);
         existing.setId(id);
         existing.setEmployee(employee);
-
-//        if (uploadImage != null && !uploadImage.isEmpty()) {
-//            String fileName = fileService.uploadImage(path, uploadImage);
-//            existing.setUploadFiles(fileName);
-//        } else {
-//            existing.setUploadFiles(oldFile);
-//        }
-
         return workExperienceRepository.save(existing);
     }
 

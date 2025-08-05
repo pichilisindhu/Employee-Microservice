@@ -51,7 +51,8 @@ public class EmployeeTeamController {
 
  //   @PreAuthorize("hasAnyRole('HR', 'MANAGER')")
     @PutMapping("/team/employee/{teamId}")
-    public ResponseEntity<String> updateTeam(@PathVariable String teamId, @Valid @RequestBody TeamController teamDTO) {
+    public ResponseEntity<String> updateTeam(@PathVariable String teamId,
+                                             @Valid @RequestBody TeamController teamDTO) {
         return new ResponseEntity<>(teamService.UpdateTeam(teamId,teamDTO), HttpStatus.OK);
     }
 

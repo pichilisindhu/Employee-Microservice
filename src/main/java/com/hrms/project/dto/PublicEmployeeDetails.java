@@ -26,5 +26,8 @@ public class PublicEmployeeDetails {
 
     private List<String> skills;
     private List<PublicProjectDTO> projects;
+    private List<AchievementsDTO> achievements;
+
+
 
 }
