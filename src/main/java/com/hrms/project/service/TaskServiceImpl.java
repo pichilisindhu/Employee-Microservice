@@ -7,6 +7,7 @@ import com.hrms.project.dto.AllTaskDTO;
 import com.hrms.project.dto.TaskDTO;
 import com.hrms.project.dto.TaskUpdateDTO;
 import com.hrms.project.entity.*;
+import com.hrms.project.handlers.EmployeeNotFoundException;
 import com.hrms.project.handlers.ProjectNotFoundException;
 import com.hrms.project.handlers.TaskNotFoundException;
 import com.hrms.project.repository.*;
@@ -59,12 +60,16 @@ public class TaskServiceImpl {
 
     public List<AllTaskDTO> getAllTasks(String employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new EntityNotFoundException("Employee not found"));
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + employeeId));
+
+        if (employee.getTasks() == null || employee.getTasks().isEmpty()) {
+            throw new TaskNotFoundException("This employee has no tasks assigned");
+        }
 
         return employee.getTasks().stream()
                 .map(task -> {
                     AllTaskDTO dto = new AllTaskDTO();
-                    dto.setId(task.getId().getTaskId()); // only taskId goes here
+                    dto.setId(task.getId().getTaskId());
                     dto.setStatus(task.getStatus());
                     dto.setTitle(task.getTitle());
                     dto.setPriority(task.getPriority());
