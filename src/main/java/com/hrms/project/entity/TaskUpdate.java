@@ -13,6 +13,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = "task")
+@ToString(exclude="task")
 public class TaskUpdate {
 
     @EmbeddedId
@@ -28,7 +30,7 @@ public class TaskUpdate {
 
     @ManyToOne
     @MapsId("taskId")
-    @JoinColumns({
+    @JoinColumns(value = {
             @JoinColumn(name = "task_id", referencedColumnName = "task_id"),
             @JoinColumn(name = "project_id", referencedColumnName = "project_id")
     })

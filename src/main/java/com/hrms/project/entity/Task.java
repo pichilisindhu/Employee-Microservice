@@ -2,6 +2,7 @@ package com.hrms.project.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hrms.project.configuration.TaskId;
 import jakarta.persistence.*;
@@ -15,8 +16,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "employee")
-@ToString(exclude = "employee")
+@EqualsAndHashCode(exclude = {"employee", "project","updateHistory"})
+@ToString(exclude = {"employee", "project","updateHistory"})
 
 public class Task {
 
@@ -46,10 +47,12 @@ public class Task {
     @ManyToOne
     @MapsId("projectId")
     @JoinColumn(name = "project_id", referencedColumnName = "projectId")
+    @JsonBackReference
     private Project project;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("task-update")
+    @JsonIgnore
     private List<TaskUpdate> updateHistory;
     
 }

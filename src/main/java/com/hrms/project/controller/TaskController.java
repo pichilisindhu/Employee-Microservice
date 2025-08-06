@@ -1,9 +1,9 @@
 package com.hrms.project.controller;
 
-
 import com.hrms.project.dto.AllTaskDTO;
 import com.hrms.project.dto.TaskDTO;
 import com.hrms.project.dto.TaskUpdateDTO;
+import com.hrms.project.entity.Task;
 import com.hrms.project.service.TaskServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,12 +22,13 @@ public class TaskController {
     private TaskServiceImpl taskService;
 
 
-    @PostMapping("/{employeeId}/{projectId}/task")
+    @PostMapping("/{tlId}/{employeeId}/{projectId}/task")
     public ResponseEntity<String> createAssignment( @PathVariable String employeeId,
+                                                    @PathVariable String tlId,
                                                     @PathVariable String projectId,
                                                     @RequestBody TaskDTO taskDTO){
 
-        return new ResponseEntity<>(taskService.createAssignment(employeeId,projectId,taskDTO), HttpStatus.CREATED);
+        return new ResponseEntity<>(taskService.createAssignment(employeeId,tlId,projectId,taskDTO), HttpStatus.CREATED);
 
     }
 
@@ -54,6 +55,12 @@ public class TaskController {
     }
 
 
+    @DeleteMapping("{projectId}/{taskId}/delete/task")
+    public ResponseEntity<String> deleteTask(@PathVariable String projectId,@PathVariable String taskId){
+        return new ResponseEntity<>(taskService.deleteTask(projectId,taskId),HttpStatus.OK);
+    }
+
+
 
     @PostMapping("/history/{projectId}/{taskId}")
     public ResponseEntity<String> createTaskHistory(@PathVariable String projectId,
@@ -76,6 +83,12 @@ public class TaskController {
     public ResponseEntity<List<TaskUpdateDTO>> getUpdateTasks(@PathVariable String projectId,
                                                         @PathVariable String taskId){
         return new ResponseEntity<>(taskService.getUpdateTasks(projectId,taskId),HttpStatus.OK);
+
+    }
+    @GetMapping("/{tlId}")
+    public ResponseEntity<List<Task>> getTasks(@PathVariable String tlId){
+
+        return new ResponseEntity<>(taskService.getTasks(tlId),HttpStatus.OK);
 
     }
 

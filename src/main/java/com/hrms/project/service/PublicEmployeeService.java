@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PublicEmployeeService {
@@ -40,7 +39,9 @@ public class PublicEmployeeService {
                     publicEmployeeDetails.setWorkEmail(emp.getWorkEmail());
                     publicEmployeeDetails.setLocation(emp.getLocation());
                     publicEmployeeDetails.setJobTitlePrimary(emp.getJobTitlePrimary());
-                    publicEmployeeDetails.setDepartment(emp.getDepartment().getDepartmentName());
+                    if(emp.getDepartment() != null) {
+                        publicEmployeeDetails.setDepartment(emp.getDepartment().getDepartmentName());
+                    }
                     publicEmployeeDetails.setEmployeeImage(emp.getEmployeeImage());
 
                     return publicEmployeeDetails;

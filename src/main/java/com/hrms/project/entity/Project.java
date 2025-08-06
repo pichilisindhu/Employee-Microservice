@@ -1,6 +1,7 @@
 package com.hrms.project.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -14,6 +15,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = {"assignments"})
+@ToString(exclude = {"assignments"})
 public class Project {
 
     @Id
@@ -35,5 +38,7 @@ public class Project {
     private List<Employee> employees;
 
     @OneToMany(mappedBy = "project",cascade = CascadeType.ALL)
+  @JsonManagedReference
     private List<Task> assignments;
+
 }
