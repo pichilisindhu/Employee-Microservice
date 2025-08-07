@@ -75,6 +75,8 @@ public class TaskServiceImpl {
                     dto.setStartDate(task.getCreatedDate());
                     dto.setDueDate(task.getDueDate());
                     dto.setProjectId(task.getProject().getProjectId());
+                    dto.setAssignedTo(task.getAssignedTo());
+                    dto.setCreatedBy(task.getCreatedBy());
                     return dto;
                 })
                 .toList();

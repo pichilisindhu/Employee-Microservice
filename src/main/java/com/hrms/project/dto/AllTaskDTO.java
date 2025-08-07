@@ -40,4 +40,6 @@ public class AllTaskDTO {
 
     @NotBlank(message = "Project ID is required")
     private String projectId;
+    private String assignedTo;
+    private String createdBy;
 }
